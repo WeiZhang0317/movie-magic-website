@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Gift Cards</title>
+    <!-- include what navi bar needed -->
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Buy Gift Cards</title>
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+}
+
+form {
+    width: 500px;
+
+ 
+}
+
+h2 {
+    margin-top: 70px; /* Adjust the margin value based on your preference */
+}
+
+        label {
+            display: block;
+
+        }
+
+        .swiper-container {
+            max-width: 100%;
+            max-height: 230px;
+            overflow: hidden;
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .swiper-slide {
+            text-align: center;
+        }
+
+        img {
+            width: 80%;
+            height: 80%;
+
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            color: rgb(251, 248, 248);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .swiper-button-next {
+            right: -10px;
+            top: 130px;
+        }
+
+        .swiper-button-prev {
+            left: -10px;
+            top: 130px;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        
+        button {
+            
+            background-color: #e91010;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+
+        }
+
+    </style>
+</head>
+<body>
+
+    <form id="giftCardForm" action="/gift_cards_payment" method="post">
+
+        {% include 'navi.html' %}
+        <h2>Buy Gift Card</h2>
+        <p>Select a gift card design:</p>
+
+
+        <!-- Swiper Container -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper" id="swiperWrapper"></div>
+            <div class="swiper-pagination"></div>
+
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+        <input type="hidden" id="selectedImage" name="selectedImage" value="">
+
+
+        <label for="cardType" style="margin-top:20px">Choose Gift Card Type:</label>
+        <select id="cardType" name="cardType">
+            <option value="25">$25</option>
+            <option value="50">$50</option>
+            <option value="100">$100</option>
+        </select>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1">
+
+        <label for="yourName">Your Name:</label>
+        <input type="text" id="yourName" name="yourName" required>
+
+        <label for="recipientsName">Recipient's Name:</label>
+        <input type="text" id="recipientsName" name="recipientsName" required>
+
+        <label for="recipientsEmail">Recipient's Email:</label>
+        <input type="email" id="recipientsEmail" name="recipientsEmail" required>
+
+        <label for="specialMessage">Special Message: (Optional)</label>
+        <textarea id="specialMessage" name="specialMessage" rows="4"></textarea>
+
+        <button type="submit">Check Out</button>
+    </form>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var imageUrls = [
+            "static/img/Gift1.png",
+            "static/img/Gift2.png",
+            "static/img/Gift3.png",
+            "static/img/Gift4.png",
+            "static/img/Gift5.png",
+            "static/img/Gift6.png",
+            "static/img/Gift7.png",
+            "static/img/Gift8.png",
+            "static/img/Gift9.png",
+        ];
+
+        var swiperContainer = document.querySelector('.swiper-container');
+
+        var swiperWrapper = document.querySelector('.swiper-wrapper');
+
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 'auto', 
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        swiper.on('slideChange', function () {
+            var activeIndex = swiper.activeIndex;
+
+            var previousSelected = document.querySelector('.swiper-slide img.selected-border');
+            if (previousSelected) {
+                previousSelected.classList.remove('selected-border');
+            }
+
+
+            var currentSlide = document.querySelectorAll('.swiper-slide')[activeIndex];
+            var currentImg = currentSlide.querySelector('img');
+            currentImg.classList.add('selected-border');
+
+
+            document.getElementById('selectedImage').value = currentImg.src;
+        });
+
+
+        function updateSwiper() {
+
+
+            swiperWrapper.innerHTML = '';
+
+
+            for (var i = 0; i < imageUrls.length; i++) {
+                var swiperSlide = document.createElement('div');
+                swiperSlide.className = 'swiper-slide';
+                var img = document.createElement('img');
+                img.src = imageUrls[i];
+                img.alt = 'Gift Card Image';
+
+                if (i === 0) {
+                    img.classList.add('selected-border');
+                    document.getElementById('selectedImage').value = imageUrls[0];
+                }
+
+
+                swiperSlide.appendChild(img);
+
+                swiperWrapper.appendChild(swiperSlide);
+            }
+
+
+            swiper.update();
+
+            var swiperSlides = document.querySelectorAll('.swiper-slide');
+            swiperSlides.forEach(function (slide, index) {
+                slide.addEventListener('click', function () {
+                    swiper.slideTo(index);
+                    document.getElementById('selectedImage').value = imageUrls[index];
+                });
+            });
+        }
+        updateSwiper();
+
+
+</script>
+
+
+</body>
+
+</html>
+

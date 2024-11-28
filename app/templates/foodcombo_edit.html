@@ -1,0 +1,55 @@
+<!--this page is for foodcombo edit-->
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<!-- Flash Area -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="col-md-6">
+    <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b; margin-top: 80px;">Food & Drinks Edit</h2>
+    <form action="{{ url_for('manager.edit_foodcombo', foodcombo_id=foodcombo_id) }}" method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" name="name" id="name" value="{{ foodcombos[1] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price (NZD):</label>
+            <input type="number" class="form-control" name="price" id="price" value="{{ foodcombos[2] }}" min = 1 required>
+        </div>
+
+        <div class="form-group">
+            <label for="currentImage">Current Image:</label>
+            <img src="{{ url_for('static', filename='img/' + foodcombos[3]) }}" alt="{{ foodcombos[1] }}" style="max-width: 200px; height: auto;">
+        </div>
+        
+        <div class="form-group">
+            <label for="FoodcomboImage">New Image (optional):</label>
+            <input type="file" class="form-control-file" id="FoodcomboImage" name="FoodcomboImage" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" name="description" id="description" maxlength="44" required>{{ foodcombos[4] }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Update</button>
+    </form>
+</div>
+
+<!-- Back button -->
+<div class="mt-3">
+    <button onclick="window.history.back();" class="btn btn-secondary">Back</button>
+</div>
+
+{% endblock %}

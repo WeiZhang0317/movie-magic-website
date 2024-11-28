@@ -1,0 +1,229 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<!-- Flash Area -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Section for Coupon List -->
+<div style="margin-bottom: 30px;">
+    <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b; margin-top: 80px;">Coupons</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Coupon Code</th>
+                <th>Discount (NZD) </th>
+                <th>Coupon Image</th>
+                <th>Coupon Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coupon in coupons %}
+                <tr>
+                    <td>{{ coupon[4] }}</td> <!-- Title -->
+                    <td>{{ coupon[1] }}</td> <!-- coupon code -->
+                    <td>{{ coupon[2] }}</td> <!-- discount -->
+                    <td>
+                        <img src="{{ url_for('static', filename='img/' + coupon[3]) }}" alt="{{ coupon[4] }}" style="width:500px;"> <!-- image -->
+                    </td>
+                    <td>{{ coupon[5] | safe}}</td> <!-- description -->
+
+                    {% if session['role'] in ['Manager', 'Admin'] %}
+                        <td>
+                            <a href="{{ url_for('manager.edit_coupon', coupon_id=coupon[0]) }}" class="btn btn-secondary">Edit</a> <!-- Edit -->
+
+                            <form action="{{ url_for('manager.delete_coupon', coupon_id=coupon[0]) }}" method="post" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this coupon?');">Delete</button>
+                            </form> <!-- Delete -->
+                        </td> 
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>
+
+<!-- Section for Add New Coupon-->
+
+<div class="mt-3">
+    
+    {% if user_role in ['Admin', 'Manager'] %}
+        <!-- collapse button for add new coupon-->
+        <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#addNewCouponForm" aria-expanded="false" aria-controls="addNewCouponForm">
+            Add New Coupon
+        </button>
+    {% endif %}
+    
+</div>
+
+<!-- form area -->
+<div class="collapse" id="addNewCouponForm">
+    <div class="card card-body">
+        <form action="{{ url_for('manager.add_coupon') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="CouponTitle">Coupon Title:</label>
+            <input type="text" class="form-control" id="CouponTitle" name="CouponTitle" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="code">Coupon Code:</label>
+            <input type="text" class="form-control" id="code" name="code" required >
+        </div>
+
+        <div class="form-group">
+            <label for="discount">Discount (NZD):</label>
+            <input type="text" class="form-control" id="discount" name="discount" min="0" step="0.01" max="5" required oninput="validateDiscount(this);" >
+        </div>
+    
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+    
+        <div class="form-group">
+            <label for="CouponImage">Coupon Image:</label>
+            <input type="file" class="form-control-file" id="CouponImage" name="CouponImage" accept="image/*" required>
+        </div>
+    
+        <button type="submit" class="btn btn-secondary">Publish</button>
+        </form>
+    </div>
+</div>
+
+<!-- Section for Weekly Discount List -->
+
+<div style="margin-top: 30px;">
+    <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b;">Weekly Discounts</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Discount Day Of Week</th>
+                <th>Discount Percent %</th>
+                <th>Discount Image</th>
+                <th>Discount Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for discount in weekly_discounts %}
+                <tr>
+                    <td>{{ discount[4] }}</td><!--Title -->
+                    <td>{{ discount[1] }}</td> <!--Discount Day Of Week  -->
+                    <td>{{ discount[2] }}</td> <!-- Discount Percent -->
+                    <td>
+                        <img src="{{ url_for('static', filename='img/' + discount[3]) }}" alt="{{ discount[1] }}" style="width:500px;"> <!-- image -->
+                    </td>
+                    <td>{{ discount[5] }}</td> <!-- Discount description -->
+                    <td>
+                        <a href="{{ url_for('manager.edit_discount', discount_id=discount[0]) }}" class="btn btn-secondary">Edit</a> <!-- Edit -->
+                        <form action="{{ url_for('manager.delete_discount', discount_id=discount[0]) }}" method="post" style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this weekly discount?');">Delete</button>
+                        </form> <!-- Delete -->
+                    </td> 
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>
+
+<!-- Section for Add New Weekly Discount-->
+
+<div class="mt-3">
+    
+    {% if user_role in ['Admin', 'Manager'] %}
+        <!-- collapse button for add new weekly discount-->
+        <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#AddNewWeeklyDiscountForm" aria-expanded="false" aria-controls="AddNewWeeklyDiscountForm">
+            Add New Weekly Discount
+        </button>
+    {% endif %}
+    
+</div>
+
+<!-- form area -->
+<div class="collapse" id="AddNewWeeklyDiscountForm">
+    <div class="card card-body">
+        <form action="{{ url_for('manager.add_discount') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="DiscountTitle">Title:</label>
+            <input type="text" class="form-control" id="DiscountTitle" name="DiscountTitle" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="DayOfWeek">Discount Day Of Week:</label>
+            <select class="form-control" name="DayOfWeek" id="DayOfWeek" required>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="DiscountPercent">Discount Percent %:</label>
+            <input type="number" class="form-control" id="DiscountPercent" name="DiscountPercent" required min="1" max="100" step="0.01" >
+        </div>
+    
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+    
+        <div class="form-group">
+            <label for="DiscountImage">Weekly Discount Image:</label>
+            <input type="file" class="form-control-file" id="DiscountImage" name="DiscountImage" accept="image/*" required>
+        </div>
+    
+        <button type="submit" class="btn btn-secondary">Publish</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- Validation of Discount -->
+<script>
+    function validateDiscount(input) {
+        var value = parseFloat(input.value);
+        var min = parseFloat(input.min);
+        var max = parseFloat(input.max);
+        if (value < min || value > max) {
+            alert('Considering theater operational costs, the discount should be between 0-5 NZD.');
+            input.value = input.defaultValue; // Reset to default if out of range
+        }
+    }
+</script>
+
+<!-- Back Button -->
+<div class="mt-3">
+    <button onclick="window.history.back();" class="btn btn-secondary">Back</button>
+
+    </form>
+    <!-- Button to go back to the dashboard as per the user's role-->
+    {% if session['role'] == 'Admin' %}
+    <a href="/admin_dashboard" class="btn btn-secondary">Dashboard</a>
+    {% elif session['role'] == 'Staff' %}
+        <a href="/staff_dashboard" class="btn btn-secondary">Dashboard</a>
+    {% elif session['role'] == 'Customer' %}
+        <a href="/customer_dashboard" class="btn btn-secondary">Dashboard</a>
+    {% else %}
+        <a href="/manager_dashboard" class="btn btn-secondary">Dashboard</a>
+    {% endif %}
+    
+</div>
+
+{% endblock %}
+
+<!-- Dian edit 20 Jan. 2pm -->

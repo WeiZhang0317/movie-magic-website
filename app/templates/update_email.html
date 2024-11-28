@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Update Email</h1>
+    {% if msg %}
+    <div class="msg alert alert-info mt-3">{{ msg }}</div>
+    {% endif %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <form action="{{ url_for('user.update_email') }}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i></label>
+                    <input type="text" name="email" class="form-control" id="email" placeholder="Email" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ url_for('user.profile') }}" class="btn btn-secondary">Back</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

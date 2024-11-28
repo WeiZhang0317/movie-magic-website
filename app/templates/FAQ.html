@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+      <style>
+      .content {
+            max-width: 1500px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+      }
+      footer {
+            color: #ffffff;
+      }
+
+      h1 { 
+            color: #ffffff;
+            padding: 15px;
+      }
+
+
+      .faq-details h2 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.25em;
+        }
+
+
+        .faq-details p {
+            font-size: 16px; 
+            margin: 10px 0; 
+        }
+
+        .faq-details {
+            max-width: 100%; /* Adjusted for better readability */
+            padding: 15px;
+            background: #464646; /* Light background for each section */
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-details p {
+            margin-bottom: 20px;
+            /* white-space: nowrap; */ /* This line is commented out or removed */
+            font-size: 14px;
+        }
+     
+      /* Search Bar Style */
+      .search-container {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .search-container input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: 1px solid #ddd;
+        }
+
+            .search-container button {
+      padding: 10px 20px; /* Increased horizontal padding for a wider button */
+      font-size: 17px;
+      border: none;
+      cursor: pointer;
+      background-color: #a50000; 
+      color: white; 
+      border-radius: 5px; 
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+      }
+
+      .search-container button:hover {
+      background-color: #9b6262; 
+      
+      }
+
+        /* Category Style */
+        .category {
+            background: #333333;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .category h3 {
+            background-color: #222222;
+            color: #bd0e0e;
+            padding: 10px;
+            margin-top: 0;
+            border-radius: 5px 5px 0 0;
+        }
+
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .search-container input[type="text"] {
+                width: 100%;
+            }
+
+                
+        h2 {
+            font-size: 20px; 
+            margin: 15px 0; 
+        }
+
+        p {
+            font-size: 14px; 
+            margin: 8px 0; 
+        }
+            }
+
+      
+        @media screen and (max-width: 768px) {
+        .content, .faq-details {
+            padding: 10px;
+        }
+
+        .faq-details h2, .faq-details p {
+            /* Adjust font sizes and margins for smaller screens */
+            font-size: calc(14px + (20 - 14) * ((100vw - 300px) / (768 - 300)));
+            margin: 8px 0;
+        }
+
+        .search-container input[type="text"], .search-container button {
+            width: 100%; /* Make search elements take full width on smaller screens */
+            margin-top: 8px; /* Ensure consistent margin */
+        }
+    }
+      
+      </style>
+    <body>
+      {% include 'navi.html' %}
+      <div class="content">
+          <h1>Frequently Asked Questions</h1>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search FAQs..." onkeyup="searchFAQs()">
+            <button onclick="searchFAQs()">Search</button>
+            </div>
+
+        <!-- FAQ Categories -->
+        <div class="category">
+            <h3>Booking Tickets</h3>
+            <div class="faq-details">
+                  <h2>1. How do I book movie tickets on Movie Magic?</h2>
+                  <p>To book tickets, simply browse our selection of movies, choose your preferred time and location, and follow the steps to complete your purchase.</p>
+      
+                  <h2>2. Can I cancel or change my booking?</h2>
+                  <p>Bookings can be changed or cancelled up to 2 hours before the showtime. Please visit your account dashboard to make changes.</p>
+      
+                  <h2>3. Are there discounts for bulk or group bookings?</h2>
+                  <p>Yes, we offer discounts for bulk bookings. Please contact our support team for more details on group discounts.</p>
+                  
+                  <h2>4. Can I view my booking history?</h2>
+                  <p>Yes, your booking history is available in your account dashboard under 'My Bookings'.</p>
+                  
+                  <h2>5. What should I do if I encounter issues during booking?</h2>
+                  <p>Contact our support team immediately via the Contact Us page, and we'll assist you.</p>
+      
+            </div>
+        </div>
+
+        <div class="category">
+            <h3>Payments and Refunds</h3>
+            <div class="faq-details">
+                  <h2>1. What payment methods are accepted?</h2>
+                  <p>We accept all major credit cards, debit cards, and select digital wallets.</p>
+      
+                  <h2>2. How secure are online transactions?</h2>
+                  <p>All transactions are encrypted with the latest security protocols to ensure your data is protected.</p>
+        
+            </div>
+        </div>
+
+        <div class="category">  
+          <h3>Promotion code and gift cards</h3>     
+          <div class="faq-details">     
+              <h2>1. How do I use a promotional code?</h2>
+              <p>Enter your promotional code at checkout to apply the discount to your booking.</p>
+
+              <h2>2. How do I use a e-giftcard?</h2>
+              <p>Enter your  e-giftcard number at checkout to apply the discount to your booking.</p>
+         </div>
+      </div>
+
+      <div class="category">   
+            <h3>Others</h3>  
+            <div class="faq-details">            
+              <h2>1. Do I need to print my ticket?</h2>
+              <p>No, you can show the digital ticket on your mobile device for entry.</p>
+           </div>
+      </div>
+    
+      <!--  footer  -->
+      <footer class="section">
+        <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+        <p>
+            <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;"></span> |
+            <a href="#" onclick="showTermsandConditions()" style="color: red; text-decoration: underline;">Terms and Conditions</a> <span style="color: red;"></span> |
+            <a href="#" onclick="showContactUs()" style="color: red; text-decoration: underline;">Contact Us</a> <span style="color: red;"></span>
+        </p>
+        <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567 </p>
+    </footer>
+
+    <script>
+           $(document).ready(() => {
+            $('#hamburger-menu').click(() => {
+                $('#hamburger-menu').toggleClass('active');
+                $('#nav-menu').toggleClass('active');
+            });
+        });
+    
+        function showPrivacyPolicy() {
+            window.location.href = "{{ url_for('user.privacy_policy') }}";
+        }
+
+        function showTermsandConditions() {
+            window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+        }
+
+        function showContactUs() {
+            window.location.href = "{{ url_for('user.contact_us') }}";
+        }
+            function searchFAQs() {
+                var input, filter, categories, h2, txtValue;
+                input = document.getElementById('searchInput');
+                filter = input.value.toUpperCase();
+                categories = document.getElementsByClassName('category');
+    
+                for (var i = 0; i < categories.length; i++) {
+                    h2 = categories[i].getElementsByTagName('h2');
+                    var visible = false;
+                    for (var j = 0; j < h2.length; j++) {
+                        txtValue = h2[j].textContent || h2[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            h2[j].style.display = "";
+                            visible = true;
+                        } else {
+                            h2[j].style.display = "none";
+                        }
+                    }
+                    categories[i].style.display = visible ? "" : "none";
+                }
+            }
+        </script>
+     
+  </body>
+  </html>

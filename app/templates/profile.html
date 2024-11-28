@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b;">My Profile</h2>
+
+    <!-- Flash Area -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-info">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="card mt-4">
+        <div class="card-body">
+           
+
+            <p style="font-size: 1rem; font-weight: 900; color: #ffffff;"><span class="main-color">Hi, {{ account[2] }}!</span> Your profile details are below:</p>
+
+            <table class="table">
+                <tr>
+                    <td style="color: white;"><strong>Name:</strong></td>
+                    <td style="color: white;">{{ account[2] }} {{ account[3] }}</td>
+                </tr>
+                <tr>
+                    <td style="color: white;"><strong>Email:</strong></td>
+                    <td style="color: white;">{{ account[4] }}</td>
+                    <td>
+                        <!-- Button to change the email address -->
+                        <form action="{{ url_for('user.update_email') }}" method="get" autocomplete="off">
+                            <button type="submit" class="btn btn-secondary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="color: white;"><strong>Mobile:</strong></td>
+                    <td style="color: white;">{{ account[5] }}</td>
+                    <td>
+                        <!-- Button to change the phone number -->
+                        <form action="{{ url_for('user.update_mobile') }}" method="get" autocomplete="off">
+                            <button type="submit" class="btn btn-secondary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+
+            <br>
+            <br>
+            <div class="button-container">
+
+
+            <!-- Button to change the password -->
+            <form action="{{ url_for('user.change_password') }}" method="get" autocomplete="off">
+                <!-- <button type="submit" class="btn btn-sm btn-warning">Change Password</button> -->
+                <button type="submit" class=" btn btn-hover" ><span style="  color: #ffffff;">Change Password</span></button>
+            </form>
+            <!-- Button to go back to the dashboard as per the user's role-->
+            {% if session['role'] == 'Admin' %}
+            <a href="/admin_dashboard" class="btn btn-secondary">Back</a>
+            {% elif session['role'] == 'Staff' %}
+                <a href="/staff_dashboard" class="btn btn-secondary">Back</a>
+            {% elif session['role'] == 'Customer' %}
+                <a href="/customer_dashboard" class="btn btn-secondary">Back</a>
+            {% else %}
+                <a href="/manager_dashboard" class="btn btn-secondary">Back</a>
+            {% endif %}
+            </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic Food & Drinks Page</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--  styles  -->
+    <style>
+    body {
+
+    background-color: #121212; 
+    color: #f1f1f1;
+}
+
+.content {
+    max-width: 1500px;
+    margin: 10px auto;
+    padding: 20px;
+}
+
+
+.food-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    max-width: 1200px;
+}
+
+.food-item {
+        width: calc(33% - 35px); 
+        height: 600px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-right: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+.food-combo-image-container {
+        width: 100%; 
+        padding-top: 100%; 
+        position: relative; 
+        background-color: #121212; 
+        border-radius: 5px 5px 0 0; 
+    }
+
+.food-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+}
+
+.food-details {
+    flex: 0.6;
+    padding: 20px;
+    background-color: #262626;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.food-details h2 {
+    color: #ff3333; 
+}
+
+footer {
+
+
+text-align: center; 
+
+font-size: 0.8em; /* Smaller font size for footer text */
+}
+
+
+@media (max-width: 768px) {
+    .food-item {
+            width: calc(50% - 20px); 
+    }
+}
+
+@media (max-width: 480px) {
+        .food-item {
+            width: 100%; 
+        }
+}
+    </style>
+</head>
+<body>
+    {% include 'navi.html' %}
+    <div class="content">
+        <h1>Food & Drinks</h1>
+        <br>
+        <h2 style="color: #c0392b;">To purchase food and beverages, please visit the movie ticket purchase page, or go to the offline cinema service area to purchase </h2>
+        <br>
+        <div class="food-container">
+            {% for combo in foodcombos %}
+            <div class="food-item">
+                <div class="food-combo-image-container">
+                    <img src="{{ url_for('static', filename='img/' + combo.Image) }}" alt="{{ combo.Name }}" class="food-image">
+                </div>
+                <div class="food-details">
+                    <h2>{{ combo.Name }}</h2>
+                    <p>{{ combo.Description }}</p>
+                    <p>$ {{ combo.Price }} </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+        <!--  footer  -->
+        <footer class="section">
+            <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+            <p>
+                <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showTermsandConditions()" style="color: red; text-decoration: underline;">Terms and Conditions</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showContactUs()" style="color: red; text-decoration: underline;">Contact Us</a> <span style="color: red;"></span>
+            </p>
+            <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567 </p>
+        </footer>
+
+        <script>
+            function showPrivacyPolicy() {
+            window.location.href = "{{ url_for('user.privacy_policy') }}";
+        }
+
+        function showTermsandConditions() {
+            window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+        }
+
+        function showContactUs() {
+            window.location.href = "{{ url_for('user.contact_us') }}";
+        }
+
+        $(document).ready(function() {
+          
+            $('.promotion-image').hover(
+                function() {
+                    $(this).css({
+                        'transform': 'scale(1.05)', 
+                        'transition': 'transform 0.5s ease'
+                    });
+                },
+                function() {
+                    $(this).css('transform', 'scale(1)'); 
+                }
+            );
+        });
+    </script>
+    <!-- OWL CAROUSEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- CUSTOM SCRIPT -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

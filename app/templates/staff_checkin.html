@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic Cinema Page</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        .cinema-container {
+            text-align: center;
+            /* Center the entire seating map */
+        }
+
+        .row-labels {
+            float: left;
+            /* row labels float to left */
+            height: 20px;
+            width: 20px;
+            line-height: 20px;
+            /* Center text vertically */
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .seat-map {
+            display: inline-block;
+            /* Make the seating map appear on the same line as the row labels */
+            margin-top: 30px;
+            /* Seat map moved down */
+        }
+
+        .seat {
+            width: 30px;
+            height: 30px;
+            margin: 5px 4px;
+            background-color: white;
+            border: 1px solid #000000;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .seat.occupied {
+            background-color: #c0392b !important;
+        }
+
+        .seat.checked-in {
+            background-color: #2980b9 !important;
+
+        }
+
+       .selected {
+            background-color: rgba(88, 234, 44, 0.805);
+        }
+
+        .front-row {
+            width: 100%;
+            text-align: center;
+            /* Center display */
+            margin-bottom: 1px;
+            /* Distance from seating chart */
+            margin-top:20px;
+        }
+
+        .row {
+            text-align: left;
+
+        }
+
+        .booking-info {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f1f1f19f 100%);
+            color: #333;
+            /* Lighter font color */
+            width: 300px;
+            height: auto;
+            /* Auto height to accommodate content */
+            text-align: left;
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(211, 210, 210, 0.575);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .no-booking-info {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f1f1f19f 100%);
+            color: #333;
+            /* Lighter font color */
+            width: 300px;
+            height: auto;
+            /* Auto height to accommodate content */
+            text-align: center;
+            /* Center alignment */
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(211, 210, 210, 0.575);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            margin: 10px;
+            cursor: pointer;
+            /* Custom styles for checkbox can be added here */
+            /* For instance: */
+            accent-color: #cf3c2c;
+            /* This will color the checkbox in most modern browsers */
+        }
+
+        .confirm-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #cf3c2c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            transition: background-color 0.3s ease;
+            /* Smooth transition for hover effect */
+        }
+
+        .confirm-button:hover {
+            background-color:  #cf3c2c;
+            /* Slightly darker shade on hover */
+            opacity: 0.8;
+        }
+
+        .checkin-list-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            vertical-align: middle;
+            /* Aligns buttons if they have different heights */
+        }
+
+      
+
+        .seat-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .tips {
+            color:  #cf3c2c;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 20px;
+            background-color: #dadada;
+            border: 2px solid #5e5e5e;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .tips::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #a03f21 transparent transparent transparent;
+            transform: translateX(-50%);
+        }
+
+
+        @media only screen and (max-width: 1200px) {
+            .seat-row {
+                transform: scale(0.8);
+            }
+        }
+
+        @media only screen and (max-width: 992px) {
+            .seat-row {
+                transform: scale(0.6);
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .seat-row {
+                transform: scale(0.5);
+            }
+        }
+
+        .wheelchair-icon {
+            font-size: 20px;
+        }
+
+        #seatStatus {
+            text-align: center;
+            margin: 10px;
+            margin-top: -5px;
+        }
+
+        #seatStatus p {
+            font-size: 16px;
+            color: #999797;
+        }
+
+        .statusIndicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 12px;
+            border-radius: 5px;
+        }
+
+        #availableStatus {
+            background-color: #b8bdb5;
+        }
+
+        #reservedStatus {
+            background-color: #cf3c2c;
+        }
+
+        #selectedStatus {
+            background-color:  #1795da;
+        }
+        .movie-info {
+            color:  #cf3c2c;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            padding: 10px 0;
+            
+            justify-content: center;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-left: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #backButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #cancelButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-right: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #cancelButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #backButton.hidden,
+        #cancelButton.hidden {
+            opacity: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    {% include 'navi.html' %}
+    <div class="cinema-container">
+
+  
+        <div class="tips"> Click on a seat to check in a customer. </div>
+
+        <div class="movie-info">
+            {% if bookings %}
+                <h2>Movie: {{ bookings[0].Title }}</h2>
+                <p>Date: {{ bookings[0].session_date }} Time: {{ bookings[0].session_time }}</p>
+            {% else %}
+                <h2>This movie has no showing time yet.</h2>
+            {% endif %}
+        </div>
+
+            
+        <div class="front-row">FRONT OF CINEMA</div>
+        <button id="backButton">&#60;</button>
+        <button id="cancelButton">x</button>
+        <br> 
+        <div id="seatStatus">
+            <p>
+                <span class="statusIndicator" id="availableStatus"></span> Not Booked
+                <span class="statusIndicator" id="reservedStatus"></span> Booked seats
+                <span class="statusIndicator" id="selectedStatus"></span> Checked seats
+                <span class="statusIndicator" id="wheelchairStatus">♿</span> Wheelchair
+            </p>
+            
+        </div>   
+        <div id="seats-container" class="seat-map">
+     
+        </div>
+        <div id="booking-info"></div>
+        
+
+        <script>
+            const sessionId = {{ session_id }};
+            console.log('sessionId', sessionId)
+            const seats = JSON.parse('{{ seats | tojson | safe }}');
+                console.log('seats=', seats)
+
+            const checkedseats = {{ checkedseats | tojson | safe  }};
+            console.log('checkstatus=', checkedseats)
+            const bookings = {{ bookings | tojson | safe }};
+            console.log('booking', bookings)
+            const cinemaType = {{ cinema_type }};
+            const bookingInfo = document.getElementById('booking-info');
+
+            // Determine the seat arrangement based on the cinema type
+            const isLargeCinema = cinemaType === 4;
+            const rows = isLargeCinema ? 12 : 6;
+            const columns = isLargeCinema ? 25 : 8;
+
+            const seatsContainer = document.getElementById('seats-container');
+            seatsContainer.style.textAlign = 'center';
+            seatsContainer.innerHTML = '';
+
+            const rowLabels = 'ABCDEFGHIJKL'.substring(0, rows);
+            console.log('rows=', rows)
+            console.log('columns=', columns)
+
+            isLargeCinema ? seats.sort((a,b) => a.SessionseatID - b.SessionseatID): seats.sort((a,b) => b.SessionseatID - a.SessionseatID)
+
+
+            for (let row = 0; row < rows; row++) {
+                const rowDiv = document.createElement('div'); // Create a new div for the row
+                rowDiv.classList.add('seat-row'); // Add the 'seat-row' class to the row div
+
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'row-labels';
+                labelDiv.textContent = rowLabels[row];
+                rowDiv.appendChild(labelDiv); // Append the label to the row div
+
+
+                for (let col = 1; col <= columns; col++) {
+                    const seat = seats.find(s => s.RowNumber === row + 1 && s.SeatNumber === col);
+                    console.log('select-seat=', seat)
+
+                    const checkedSeats = checkedseats.find(cs => cs.SessionSeatID == seat?.SessionseatID && cs.Checkin == 1);
+
+                    console.log('======================')
+                    console.log('seat=', seat)
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = 'seat' + (seat && seat.Available == 0 ? ' occupied' : '') +
+                        (checkedSeats ? ' checked-in' : '');
+
+                    console.log('seat.classname', seatDiv)
+                    console.log('======================')
+
+
+                    seatDiv.dataset.row = rowLabels[row]; // Store the row label
+                    seatDiv.dataset.col = col; // Store the column number
+
+                    if (row === rows - 1 && (col === 1 || col === 2)) {
+                        seatDiv.innerHTML = `<span class="wheelchair-icon">&#9855;</span>`;
+
+                    }
+
+                    if (seat && seat.Available === 0) {
+                        seatDiv.classList.add("occupied");
+                    }
+
+                    seatDiv.addEventListener('click', function () {
+                        displayBookingInfo(this.dataset.row, this.dataset.col);
+                    });
+
+                    rowDiv.appendChild(seatDiv); // Append each seat to the row div
+                }
+
+                seatsContainer.appendChild(rowDiv); // Append the entire row div to the seats container
+            }
+
+            function displayBookingInfo(rowLabel, col) {
+                // Clear previous booking info
+                bookingInfo.innerHTML = '';
+
+
+                // Parse row label to get the row number
+                const row = rowLabels.indexOf(rowLabel) + 1;
+
+                // Convert row number to a letter (e.g., 1 -> A, 2 -> B, etc.)
+                const rowLetter = String.fromCharCode(64 + row);
+
+                // Find the booking for the clicked seat
+                const booking = bookings.find(b => b.RowNumber === row && b.SeatNumber === parseInt(col));
+                const seatDiv = document.querySelector(`.seat[data-row='${rowLabel}'][data-col='${col}']`);
+
+                if (seatDiv.classList.contains('checked-in')) {
+                    // Display already checked-in message if the seat is blue
+                    const alreadyCheckedInDiv = document.createElement('div');
+                    alreadyCheckedInDiv.classList.add('booking-info');
+                    alreadyCheckedInDiv.innerHTML = `
+            <strong style="color: red;">Seat already checked in</strong><br>
+            <strong>Booking information:</strong><br>   
+            <strong>Seat:</strong> ${rowLetter}${col}<br>      
+            <strong>Booked by:</strong> ${booking.FirstName} ${booking.LastName}<br>
+            <strong>Email:</strong> ${booking.UserEmail}<br>
+            <strong>Mobile:</strong> ${booking.Mobile}
+        `;
+                    bookingInfo.appendChild(alreadyCheckedInDiv);
+                } else if (booking) {
+                    // If the seat is booked but not checked in
+                    const infoDiv = document.createElement('div');
+                    infoDiv.classList.add('booking-info');
+                    infoDiv.innerHTML = `
+            <strong>Seat:</strong> ${rowLetter}${booking.SeatNumber}<br>
+            <strong>Booked by:</strong> ${booking.FirstName} ${booking.LastName}<br>
+            <strong>Email:</strong> ${booking.UserEmail}<br>
+            <strong>Mobile:</strong> ${booking.Mobile}
+        `;
+
+                    const confirmButton = document.createElement('button');
+                    confirmButton.textContent = 'Check';
+                    confirmButton.classList.add('confirm-button');
+                    confirmButton.onclick = function () {
+                        seatDiv.classList.add('checked-in');
+                        displayBookingInfo(rowLabel, col);
+                        confirmBooking(booking, seatDiv, rowLabel, col); // Refresh the booking info display
+                    };
+
+                    bookingInfo.appendChild(infoDiv);
+                    bookingInfo.appendChild(confirmButton);
+
+
+                } else {
+                    // if not booked
+                    const noBookingDiv = document.createElement('div');
+                    noBookingDiv.classList.add('no-booking-info');
+                    noBookingDiv.textContent = `Seat ${rowLetter}${col} is not booked.`;
+                    bookingInfo.appendChild(noBookingDiv);
+                }
+            }
+
+
+
+            function confirmBooking(booking, seatDiv, rowLabel, col) {
+                fetch('/confirm_checkin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        booking_id: booking.BookingID,
+                        sessionseat_id: booking.seatID
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while confirming the check-in.');
+                        seatDiv.classList.remove('checked-in'); // Optionally revert the color change on error
+                    });
+            }
+           
+            
+            
+        // Function to handle Back and Cancel perfromance 
+        document.getElementById("backButton").addEventListener("click", function () {
+            history.back(); 
+        });
+
+        document.getElementById("cancelButton").addEventListener("click", function () {
+            window.location.href = "/"; 
+        });
+
+        window.onscroll = function () {
+            var backButton = document.getElementById("backButton");
+            var cancelButton = document.getElementById("cancelButton");
+
+            // Check if the user has scrolled
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backButton.classList.add("hidden");
+                cancelButton.classList.add("hidden");
+            } else {
+                backButton.classList.remove("hidden");
+                cancelButton.classList.remove("hidden");
+            }
+        };
+
+
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const tipsElement = document.querySelector('.tips');
+                const seats = document.querySelectorAll('.seat');
+                seats.forEach(seat => {
+                    seat.addEventListener('click', function () {
+                        tipsElement.style.display = 'none';
+                    });
+                });
+            });
+
+
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+{% block content %}
+     
+<!-- Registration Form -->
+<div class="col-md-6">
+    <h4 style="font-size: 2rem; font-weight: 900; color: #c0392b;">Register</h4>
+    <br>
+    <form action="{{ url_for('user.register') }}" method="post">
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="firstName">First Name <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first Name" value="{{ request.form.first_name }}" required>
+            {% if error_message and error_message.first_name %}
+            <p class="text-danger">{{ error_message.first_name }}</p>
+            {% endif %}
+        </div>
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="lastName">Last Name <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last Name" value="{{ request.form.last_name }}" required>
+            {% if error_message and error_message.last_name %}
+            <p class="text-danger">{{ error_message.last_name }}</p>
+            {% endif %}
+        </div>
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email <span style="color: red;">*</span></label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ request.form.email }}" required>
+            {% if error_message and error_message.email %}
+            <p class="text-danger">{{ error_message.email }}</p>
+            {% endif %}
+        </div>
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password <span style="color: red;">*</span></label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            {% if error_message and error_message.password %}
+            <p class="text-danger">{{ error_message.password }}</p>
+            {% endif %}
+        </div>
+        <!-- Phone Number -->
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number <span style="color: red;">*</span></label>
+            <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your phone number" value="{{ request.form.phone_number }}" required>
+            {% if error_message and error_message.phone_number %}
+            <p class="text-danger">{{ error_message.phone_number }}</p>
+            {% endif %}
+        </div>
+        <!-- Date of Birth -->
+        <div class="form-group">
+            <label for="dob">Date of Birth <span style="color: red;">*</span></label>
+            <input type="date" class="form-control" id="dob" name="dob" value="{{ request.form.dob }}" required>
+            {% if error_message and error_message.dob %}
+            <p class="text-danger">{{ error_message.dob }}</p>
+            {% endif %}
+        </div>
+        <!-- Accept Terms -->
+        <div class="form-group">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="acceptTerms" name="acceptTerms" required>
+                <label class="form-check-label" for="acceptTerms">
+                    I have read and agree to the <a href="#" onclick="showTerms()" style="color: red; text-decoration: underline;">Terms & Conditions</a> 
+                    and <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;">*</span>
+                </label>
+            </div>
+        </div>
+        
+        <script>
+            function showTerms() {
+                window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+            }
+        
+            function showPrivacyPolicy() {
+                window.location.href = "{{ url_for('user.privacy_policy') }}";
+            }
+        </script>
+        
+        <button type="submit" class="btn btn-hover" name="submit"><span style="  color: #ffffff;">Join </span></button>
+     
+    </form>
+</div>
+
+                    <!-- Flash Message Display -->
+                    <div class="col-md-6">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="alert alert-success">
+                                    <ul>
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
+         
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Update Phone Number</h1>
+    {% if msg %}
+    <div class="msg alert alert-info mt-3">{{ msg }}</div>
+    {% endif %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <form action="{{ url_for('user.update_mobile') }}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <label for="mobile"><i class="fas fa-envelope"></i></label>
+                    <input type="text" name="mobile" class="form-control" id="mobile" placeholder="Mobile" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ url_for('user.profile') }}" class="btn btn-secondary">Back</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

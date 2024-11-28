@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Cards</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+
+.content {
+            max-width: 1500px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        footer {
+            color: #ffffff;
+        }
+
+        h1 { 
+            color: #ffffff;
+            padding: 15px;
+        }
+
+
+        .gift-card-intro p:first-child {
+            margin-bottom: 20px;
+        }
+
+        .giftcards-container {
+            display: flex;
+            flex-wrap: wrap;
+
+        }
+        .giftcards-image {
+            max-width: 50%; 
+            height: auto;
+            padding: 20px 0;
+        }
+
+        .giftcards-details h2 {
+            margin-bottom: 20px; /* Adjust the value for more or less space */
+        }
+
+        .giftcards-details {
+            flex: 1; 
+            max-width: 50%; 
+            padding: 15px;
+        }
+
+        .giftcards-details p {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .buy-gift-card-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e01010;
+            color: #fcfbfb;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 20px;
+            margin-left: auto;
+        }
+
+@media screen and (max-width: 768px) {
+        .giftcards-image,
+        .giftcards-details {
+            max-width: 100%; 
+        }
+    }
+        
+    </style>
+</head>
+<body>
+
+    {% include 'navi.html' %}
+    <div class="content">
+        <h1>eGift Cards Shop</h1>
+
+        <!-- Gift Card Introduction -->
+        <div class="gift-card-intro">
+            <p>Welcome to Movie Magic eGift Cards Shop!<p>
+            <p>eGift cards offer instant, customizable, and eco-friendly 
+                gifting solution</p>
+            <p>with the flexibility for recipients to choose 
+                their preferred items.</p>
+        </div>
+
+        <div class="giftcards-container">
+            <img src="{{ url_for('static', filename='img/giftcombo1.png') }}" alt="How it works" class="giftcards-image">
+            <img src="{{ url_for('static', filename='img/giftcombo2.png') }}" alt="How it works" class="giftcards-image">
+            <div class="giftcards-details">
+                <h2>How it works</h2>
+                <p>1. Browse & Select:<p>
+                <p>Explore our vast collection of eGift cards, choose the design that resonate with your loving spirit.<p>
+                <p>2. Type & Quantity<p>
+                <p>Select the quantity, select the quantity<p>
+                <p>3. Preview & Personalise:<p>
+                <p>Take a moment to preview your creation, add a personal touch.<p>
+                <p>4: Send & Share the Magic<p>
+                <p>Hit the 'Send" button and watch as your personalised eGift card transports to your recipient's inbox<p>
+                <a href="{{ url_for('gift_card.gift_cards_choose') }}" class="buy-gift-card-button">Buy Gift Card</a>
+            </div>
+        </div>
+
+
+        <!--  footer  -->
+        <footer class="section">
+            <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+            <p>
+                <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showTermsandConditions()" style="color: red; text-decoration: underline;">Terms and Conditions</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showContactUs()" style="color: red; text-decoration: underline;">Contact Us</a> <span style="color: red;"></span>
+            </p>
+            <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567 </p>
+        </footer>
+
+        <script>
+            function showPrivacyPolicy() {
+            window.location.href = "{{ url_for('user.privacy_policy') }}";
+        }
+
+        function showTermsandConditions() {
+            window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+        }
+
+        function showContactUs() {
+            window.location.href = "{{ url_for('user.contact_us') }}";
+        }
+        </script>
+    </div>
+    <!-- OWL CAROUSEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- CUSTOM SCRIPT -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

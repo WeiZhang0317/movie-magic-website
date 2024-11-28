@@ -1,0 +1,29 @@
+<!--this page is for customer dashboard-->
+{% extends 'layout.html' %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="card mt-4">
+
+    <div class="card-body">
+        <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b;">Customer Dashboard</h2> 
+        <br>
+        <br>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('user.profile') }}" class="btn btn-danger btn-block">
+                <i class="bi bi-person"></i> My Profile
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('customer.customer_booking_history') }}" class="btn btn-danger btn-block">Booking History</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('customer.customer_gift_cards') }}" class="btn btn-danger btn-block">Gift Cards</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

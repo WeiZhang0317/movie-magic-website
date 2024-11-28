@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation Menu Here -->
+    {% include 'navi.html' %}
+    <!-- bigPoster SECTION -->
+    <div class="poster-section">
+        <!-- Poster SLIDE -->
+        <div class="owl-carousel carousel-nav-center" id="poster-carousel">
+            {% for bigposter in bigposters %}
+            <!-- SLIDE ITEM -->
+            <div class="poster-slide-item">
+                <img src="{{ url_for('static', filename='img/' + bigposter.Bigposter) }}" class="featured">
+                <div class="overlay"></div>
+                <div class="poster-slide-item-content">
+                    <div class="item-content-wraper">
+                        <div class="item-content-title top-down">
+                            {{ bigposter.Title }}
+                        </div>
+                        <div class="movie-infos top-down delay-2">
+                            <div class="movie-info">
+                                <i class="fa-solid fa-star"></i>
+                                <span>{{ bigposter.MovieRating }}</span>
+                            </div>
+                            <div class="movie-info">
+
+                                <i class="fa-solid fa-clapperboard"></i>
+                                <span>{{ bigposter.GenreName }}</span>
+                            </div>
+                            <div class="movie-info">
+
+                                <i class="fa-solid fa-earth-americas"></i>
+                                <span>{{ bigposter.Language}}</span>
+                            </div>
+                            <br>
+                            <div class="movie-info">
+                                <i class="fa-solid fa-person"></i>
+                                <span>Cast: {{ bigposter.ActorName}}</span>
+                            </div>
+                        </div>
+
+                        <div class="item-content-description top-down delay-4">
+                            {{ bigposter.Description }}
+                        </div>
+                        <div class="item-action top-down delay-6">
+                            {% if is_logged_in %}
+                                <!-- If the user is logged in, provide the direct booking link -->
+                                <a href="/bookings?selected_movie_id={{ bigposter.ID }}" class="btn btn-hover">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span>Buy the Ticket</span>
+                                </a>
+                            {% else %}
+                                <!-- If the user is not logged in, link to the login page -->
+                                <a href="{{ url_for('user.login') }}" class="btn btn-hover">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span>Buy the Ticket</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END SLIDE ITEM -->
+            {% endfor %}
+        </div>
+    </div>
+    <!-- end bigPoster SECTION -->
+   
+     <!-- Search box SECTION -->
+
+     <div class="section">
+        <div class="container">
+            <!-- Search Box for Current Movies -->
+            <div class="search-box">
+             <form action="/search" method="get">   
+                <input type="text" placeholder="Search Titles/people/genres..." name="searchQuery" id="searchCurrentMovies">
+                <button onclick="searchMovies('current')" class="btn btn-hover btn-red"><span>Search</span></button>
+             </form>
+            </div>
+        </div>
+    </div>
+    
+
+ 
+    <!-- CURRENT MOVIES SECTION -->
+    <div class="section">
+        <div class="container">
+            <div class="section-header">
+                View Current Movies
+            </div>
+            <div class="movies-slide carousel-nav-center owl-carousel">
+                <!--CURRENT MOVIE ITEM -->
+                {% for currentmovie in currentmovies %}
+                <a href="{{ url_for('movie.movies', movie_id= currentmovie.ID) }}" class="movie-item">
+                    <img src="{{ url_for('static', filename='img/' + currentmovie.Image) }}" class="featured">
+                    <div class="movie-item-content">
+                        <div class="movie-item-title">
+                            {{ currentmovie.Title }}
+                        </div>
+                        <div class="movie-infos">
+                            <div class="movie-info">
+                                <i class="fa-solid fa-clapperboard"></i>
+                                <span>  {{ currentmovie.GenreName }}</span>
+                            </div>
+                            <div class="movie-info">
+                                <i class="fa-solid fa-earth-americas"></i>
+                                <span>  {{ currentmovie.Language }}</span>
+                            </div>
+                          
+                      
+                        </div>
+                    </div>
+                </a>
+                
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+                <!-- END CURRENT MOVIE ITEM -->
+    <!-- UPCOMING MOVIES SECTION -->
+    <div class="section">
+        <div class="container">
+            <div class="section-header">
+                View Upcoming Movies
+            </div>
+            <div class="movies-slide carousel-nav-center owl-carousel">
+                <!--UPCOMING MOVIE ITEM -->
+                {% for upcomingmovie in  upcomingmovies %}
+                <a href="{{ url_for('movie.movies', movie_id= upcomingmovie.ID) }}" class="movie-item">
+   
+                    <img src="{{ url_for('static', filename='img/' + upcomingmovie.Image) }}" class="featured">
+                    <div class="movie-item-content">
+                        <div class="movie-item-title">
+                            {{ upcomingmovie.Title }}
+                        </div>
+                        <div class="movie-infos">
+                            <div class="movie-info">
+                                <i class="fa-solid fa-clapperboard"></i>
+                                <span>  {{ upcomingmovie.GenreName }}</span>
+                            </div>
+                            <div class="movie-info">
+                                <i class="fa-solid fa-earth-americas"></i>
+                                <span>  {{ upcomingmovie.Language }}</span>
+                            </div>
+                            <div class="movie-info">
+                                <i class="fa-sharp fa-solid fa-calendar-week"></i>
+                                <span>  {{ upcomingmovie.ReleaseDate.strftime('%d-%m-%Y') }}</span>
+                            </div>
+                            
+                      
+                        </div>
+                    </div>
+                </a> 
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+        
+                <!-- END UPCOMING MOVIE ITEM -->
+
+     <!-- FOOTER SECTION -->
+     <footer class="section">
+        <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+        <p>
+            <a href="{{ url_for('user.privacy_policy') }}"style="color: red; text-decoration: underline;">Privacy Policy</a> |
+            <a href="{{ url_for('user.terms_and_conditions') }}"style="color: red; text-decoration: underline;">Terms of Service</a> |
+            <a href="{{ url_for('user.contact_us') }}"  style="color: red; text-decoration: underline;">Contact Us</a>
+        </p>
+        <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567</p>
+    </footer>
+    <!-- END FOOTER SECTION -->            
+
+    <!-- OWL CAROUSEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- CUSTOM SCRIPT -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,104 @@
+<!--this page is for movie list edit-->
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<!-- Flash Area -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="col-md-6">
+    <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b; margin-top: 80px;">Movie Edit</h2>
+    <form action="{{ url_for('manager.movie_list_edit', movie_id=movie[0]) }}" method="post" enctype="multipart/form-data">
+        
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ movie[1] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="language">Language:</label>
+            <input type="text" class="form-control" id="language" name="language" value="{{ movie[2] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" required>{{ movie[3] }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="release_date">Release Date:</label>
+            <input type="date" class="form-control" id="release_date" name="release_date" value="{{ movie[4] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Update Poster:</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+        </div>
+    
+        <div class="form-group">
+            <label for="carousel_poster">Update Carousel Poster:</label>
+            <input type="file" class="form-control" id="carousel_poster" name="carousel_poster" accept="image/*">
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="delete_carousel" name="delete_carousel">
+            <label class="form-check-label" for="delete_carousel">
+                Delete currently existing Carousel Poster
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="genre">Genre:</label>
+            <select class="form-control" id="genre" name="genre">
+                {% for genre in genres %}
+                <option value="{{ genre[0] }}" {% if genre[0] == movie[5] %} selected {% endif %}>
+                    {{ genre[1] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <select class="form-control" id="rating" name="rating">
+                {% for rating in ratings %}
+                <option value="{{ rating[0] }}" {% if rating[0] == movie[6] %} selected {% endif %}>
+                    {{ rating[1] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="actor">Actor:</label>
+            <select class="form-control" id="actor" name="actor">
+                {% for actor in actors %}
+                <option value="{{ actor[0] }}" >
+                    {{ actor[1] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="duration">Duration (Minutes):</label>
+            <input type="number" class="form-control" id="duration" name="duration" min="1" value="{{ movie[8] }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Update</button>
+    </form>
+</div>
+
+<div class="mt-3">
+    <button onclick="window.history.back();" class="btn btn-secondary">Back</button>
+</div>
+
+{% endblock %}

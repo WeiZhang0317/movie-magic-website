@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+/* Rating Section Positioning */
+.rating-section {
+    position: absolute;
+    top: 90px;
+    right: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Star Icon Style */
+.fa-star {
+    color: #ceb008; /* Gold color */
+}
+
+/* Movie Container Padding */
+.movie-container {
+    padding-top: 50px;
+}
+
+/* Style for Rate and Popularity Buttons */
+.rate-button, .popularity-button {
+    background-color: transparent;
+    border: none;
+    color: #ceb008;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+/* Star Icon Margin Adjustment */
+.rate-button .fa-star, .popularity-button .fa-solid {
+    margin-right: 5px;
+}
+
+/* Modal Background Style */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); /* Black with opacity */
+}
+
+
+/* Modal Content Style */
+.modal-content {
+  background-color: #443f3f;
+  margin: 15% auto;
+  padding: 20px;
+  width: 30%;
+  position: relative;
+  text-align: center;
+}
+
+/* Close Button Style */
+.close {
+  color: #ffffff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover, .close:focus {
+  color: #c9c9c9;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Submit Button Style */
+.btn-submit {
+  background-color: #808080;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+}
+
+/* Star Rating Color Styles */
+.star {
+  font-size: 5vh;
+  cursor: pointer;
+}
+.one { color: rgb(97, 97, 97); }
+.two { color: rgb(145, 145, 145); }
+.three { color: rgb(196, 196, 196); }
+.four { color: rgb(165, 207, 136); }
+.five { color: rgb(162, 224, 126); }
+.six { color: rgb(78, 241, 86); }
+.seven { color: rgb(170, 255, 59); }
+.eight { color: rgb(252, 255, 85); }
+.nine { color: rgb(251, 255, 26); }
+.ten { color: rgb(251, 255, 0); }
+
+
+
+</style>
+</head>
+
+<body>
+    {% include 'navi.html' %}
+    <div class="movie-container">
+        <div class="movie-poster">
+            <img src="{{ url_for('static', filename='img/' + movie.Image) }}" alt="{{ movie.Title }}" />
+        </div>
+        
+
+        {% if is_logged_in %}
+        {% if original_date <= feb_end_date %}
+       <!-- section for rating and movie scores -->
+        <div class="rating-section">
+            <i class="fa fa-star"></i> 
+            <span class="rating-value">{{ movie.Score }}/10</span>
+         
+            <button id="rateButton"  class="rate-button">
+              <i class="fa-regular fa-star"></i>
+              Rate This Movie
+            </button>
+        </div>
+        {% else %}
+        <div class="rating-section">
+            <i class="fa fa-star"></i> 
+            <span class="rating-value">{{ movie.Score }}/10 (The rating system will be launched after the movie is released.)</span>
+        </div>
+        {% endif %}
+        {% endif %}
+
+
+
+                
+        <!-- Rating Modal -->
+        <div id="ratingModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+            <span class="close">&times;</span>
+            <p style="color: rgb(255, 255, 2);">Rate This:</p> 
+            <h3>{{ movie.Title }}</h3>
+          
+            <div class="star-rating">
+                <span class="star" onclick="updateRating(1)">★</span>
+                <span class="star" onclick="updateRating(2)">★</span>
+                <span class="star" onclick="updateRating(3)">★</span>
+                <span class="star" onclick="updateRating(4)">★</span>
+                <span class="star" onclick="updateRating(5)">★</span>
+                <span class="star" onclick="updateRating(6)">★</span>
+                <span class="star" onclick="updateRating(7)">★</span>
+                <span class="star" onclick="updateRating(8)">★</span>
+                <span class="star" onclick="updateRating(9)">★</span>
+                <span class="star" onclick="updateRating(10)">★</span>
+                <h3 id="output">Rating is: 0/10</h3>
+            </div>
+            
+            <button id="submitRating" class="btn-submit">Rate</button>
+            </div>
+        </div>
+
+        <div class="movie-content">
+            <h1 class="movie-title">{{ movie.Title }} </h1>
+            <br>
+            <p class="movie-description">{{ movie.Description }}</p>
+            <div class="movie-in">
+                <br>
+                {% if original_date > feb_end_date %}
+                    <p style= "color:#c0392b;"><strong>Release Date:</strong> {{ movie.FormattedReleaseDate }}</p>
+                {% endif %}
+                {% if original_date <= feb_end_date %}
+                    <p><strong>Movie Rating:</strong> {{ movie.MovieRating }}</p>
+                {% endif %}
+
+                <br>
+                <p><strong>Genre:</strong> {{ movie.GenreName }}</p>
+                <br>
+                <p><strong>Language:</strong> {{ movie.Language }}</p>
+                <br>
+                <p><strong>Running Time:</strong> 92 mins</p>
+                <br>
+                <p><strong>Cast:</strong> {{ movie.ActorName }}</p>
+            </div>
+            {% if original_date <= feb_end_date %}
+            <div class="movie-actions">
+                {% if is_logged_in %}
+                <a href="/bookings?selected_movie_id={{ movie.ID }}">
+                <button class="btn book-btn">Book the ticket</button>
+                </a>
+                {% else %}
+                <!-- If the user is not logged in, link to the login page -->
+                <a href="{{ url_for('user.login') }}">
+                <button class="btn book-btn">Book the ticket</button>
+                </a>
+                {% endif %}
+                <button class="btn share-btn">Share</button>
+            </div>
+            {% endif %}
+
+            {% if original_date > feb_end_date %}
+            <div class="movie-actions">
+ 
+                <button class="btn share-btn">Share</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+    <script>
+        // Define the updateRating function in the global scope
+        function updateRating(n) {
+            const stars = document.getElementsByClassName("star");
+            removeStarStyles();
+            for (let i = 0; i < n; i++) {
+                stars[i].classList.add('selected');
+                let cls = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][i];
+                stars[i].classList.add(cls);
+            }
+            const output = document.getElementById("output");
+            output.innerText = `Rating is: ${n}/10`;
+            window.currentRating = n;
+        }
+    
+        // Function to remove styles from stars
+        function removeStarStyles() {
+            const stars = document.getElementsByClassName("star");
+            for (let star of stars) {
+                star.className = 'star';
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const shareButton = document.querySelector('.share-btn');
+            shareButton.addEventListener('click', () => {
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('URL copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            });
+    
+            const modal = document.getElementById('ratingModal');
+            const btn = document.getElementById('rateButton');
+            const span = document.getElementsByClassName("close")[0];
+    
+            btn.onclick = function() { modal.style.display = "block"; }
+            span.onclick = function() { modal.style.display = "none"; }
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
+    
+            // Set event listeners for stars
+            const stars = document.getElementsByClassName("star");
+            Array.from(stars).forEach((star, index) => {
+                star.onclick = () => updateRating(index + 1);
+            });
+    
+            const rateButton = document.getElementById('submitRating');
+            rateButton.addEventListener('click', function() {
+                const movieId = window.location.pathname.split('/').pop();
+                
+                fetch('/submit_rating', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ movie_id: movieId, user_rating: window.currentRating }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const ratingValue = document.querySelector('.rating-value');
+                        ratingValue.innerText = `${data.new_average.toFixed(1)}/10`;
+                        alert('Thank you for rating!');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('There was a problem submitting your rating.');
+                });
+    
+                modal.style.display = 'none'; 
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>

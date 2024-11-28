@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select tickets</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <style>
+        .ticketSelectionContainer,
+        #foodSelectionContainer {
+            text-align: center;
+            margin: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .moviecontainer {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            padding: 20px 0;
+            justify-content: center;
+            margin-left: 15px;
+        }
+
+        .movie-poster img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .movie-content {
+            text-align: center;
+            padding: 20px 10px;
+            max-width: 800px;
+        }
+
+        .movie-title {
+            color: #fff;
+            font-size: 1.5em;
+            margin: 0 0 10px 0;
+        }
+
+
+        h1 {
+            color: #c0392b;
+        }
+
+        p {
+            margin-top: 8px;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        #summary {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #ticketOptions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .ticket {
+            background-color: #141313b1;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin: 10px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            width: 150px;
+        }
+
+        .addButton,
+        .subtractButton,
+        .foodAddButton,
+        .foodSubtractButton {
+            background-color: #ec3a26;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin-top: 5px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            font-size: 1.5em;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .foodSubtractButton.disabled {
+            background-color: #999;
+            /* cursor: not-allowed; */
+        }
+
+        .foodSubtractButton.active {
+            background-color: #ec3a26;
+        }
+
+        .addButton:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .totalPrice {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #checkoutButtonContainer,
+        #proceedToFoodButtonContainer {
+            text-align: center;
+        }
+
+        #checkoutButton,
+        #proceedToFood {
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            margin-top: 15px;
+            cursor: pointer;
+            width: 150px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        #proceedToFood:disabled {
+            background-color: #999;
+        }
+
+
+        #foodSelectionForm {
+            margin: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .food-combo-container {
+            flex: 1 1 calc(25% - 20px);
+            max-width: calc(25% - 20px);
+            background-color: #1e1e1e;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .food-combo-container {
+                flex-basis: calc(33.33% - 20px);
+                max-width: calc(33.33% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .food-combo-container {
+                flex-basis: calc(50% - 20px);
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        .food-combo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .food-combo-image-container {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            background-color: #121212;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .food-combo-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .food-combo-details {
+            padding: 10px;
+            background-color: #262626;
+            color: #fff;
+        }
+
+        .food-combo-details h2 {
+            margin-top: 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .food-combo-details p {
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .food-combo-quantity {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            .food-combo-container {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .food-combo-container {
+                flex-basis: calc(100% - 20px);
+                max-width: calc(100% - 20px);
+            }
+        }
+
+
+        .ticket-info {
+            color: #f0e9e9;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
+
+        #summary {
+            color: #c0392b;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 6px;
+            left: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-left: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #backButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #cancelButton {
+            position: fixed;
+            top: 6px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-right: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #cancelButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #backButton.hidden,
+        #cancelButton.hidden {
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+
+            #backButton,
+            #cancelButton {
+                top: -20px;
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            #backButton {
+                left: -20px;
+            }
+
+            #cancelButton {
+                right: -20px;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+    {% include 'navi.html' %}
+    <button id="backButton">&#60;</button>
+    <button id="cancelButton">x</button>
+    <div id="ticketSelectionContainer">
+
+        <div class="moviecontainer" style="text-align: center; margin-bottom: 20px;">
+            <h1 style="margin-top: 20px; margin-bottom: 20px;">Choose your tickets</h1>
+            <div class="movie-poster">
+                <img src="{{ url_for('static', filename='img/' + movie[5]) }}" alt="{{ movie[1] }}" />
+            </div>
+        </div>
+
+        <div id="summary">
+            <h3><span id="selectedTickets">0</span> / <span id="totalTickets">2</span> tickets selected</h3>
+        </div>
+
+        <div class="ticket-info">
+            <p>Please bring valid photo ID for check-in, failure to do so may require additional ticketing.</p>
+        </div>
+
+        <!-- ticket options here -->
+        <div id="ticketOptions">
+            {% for ticket in ticket_types %}
+            <div class="ticket" id="ticket{{ ticket[0] }}" data-price="{{ ticket[2] }}">
+                <h3>{{ ticket[1] }}</h3>
+                <p>${{ ticket[2] }}</p>
+                <button class="subtractButton"
+                    onclick="updateTicketCount('ticket{{ ticket[0] }}', -1,'{{ ticket[2] }}')">-</button>
+                <span id="ticketCount{{ ticket[0] }}">0</span>
+                <button class="addButton"
+                    onclick="updateTicketCount('ticket{{ ticket[0] }}', +1,'{{ ticket[2] }}')">+</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="totalPrice">
+            <h2>Total Price: $<span id="displayTicketTotalPrice">0.00</span></h2>
+        </div>
+
+        <div id="dataContainer" data-session-id="{{ session_id|tojson|safe }}"></div>
+
+        <div id="proceedToFoodButtonContainer">
+            <button id="proceedToFood" onclick="proceedToFood()">Proceed</button>
+        </div>
+
+    </div>
+
+    <div id="foodSelectionContainer" style="display: none;">
+        <h1 style="margin-top: 40px; margin-bottom: 40px;">Want to add snacks?</h1>
+        <form id="foodSelectionForm">
+            {% for combo in food_combos %}
+            <div class="food-combo-container">
+                <div class="food-combo-image-container">
+                    <img src="{{ url_for('static', filename='img/' + combo[3]) }}" alt="{{ combo[1] }} Image"
+                        class="food-combo-image">
+                </div>
+                <div class="food-combo-details">
+                    <h2>{{ combo[1] }}</h2>
+                    <p>{{ combo[4] }}</p>
+                    <h3>${{ combo[2] }}</h3>
+                    <div class="food-quantity-controls">
+
+                        <button type="button" class="foodSubtractButton disabled" data-id="{{ combo[0] }}"
+                            onclick="updateFoodComboCount('{{ combo[0] }}', -1, '{{ combo[2] }}')">-</button>
+
+                        <span id="foodComboCount{{ combo[0] }}">0</span>
+                        <button type="button" class="foodAddButton"
+                            onclick="updateFoodComboCount('{{ combo[0] }}', +1, '{{ combo[2] }}')">+</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </form>
+
+        <div class="totalPrice">
+            <h3>Food Price: $<span id="displayFoodTotalPrice">0.00</span></h3>
+        </div>
+
+        <div class="totalPrice">
+            <h2>Total Price: $<span id="displayTotalPrice">0.00</span></h2>
+        </div>
+
+
+        <div id="checkoutButtonContainer">
+            <button id="checkoutButton" onclick="collectAndSubmit()">Check Out</button>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        document.getElementById('proceedToFood').disabled = true;
+
+        document.querySelectorAll('.subtractButton').forEach(subtractButton => {
+            subtractButton.style.backgroundColor = '#999';
+        });
+
+        var session_id = JSON.parse(document.getElementById('dataContainer').getAttribute('data-session-id'));
+        // Function to extract query parameter from URL
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Retrieve seat count from the query parameter
+        const seatCount = parseInt(getQueryParam('seatCount')) || 0;
+
+        document.getElementById('totalTickets').textContent = seatCount;
+
+        // Function to update selected ticket count and total price
+        function updateTicketCount(ticketType, quantity, ticketPrice) {
+            const ticketElement = document.getElementById(ticketType);
+            const countElement = document.getElementById(`ticketCount${ticketType.replace('ticket', '')}`);
+            const currentCount = parseInt(ticketElement.dataset.count) || 0;
+
+            const newCount = Math.max(Math.min(currentCount + quantity, seatCount), 0);
+
+            // Update the dataset attribute and display
+            ticketElement.dataset.count = newCount;
+            countElement.textContent = newCount;
+            document.getElementById('selectedTickets').textContent = calculateTotalTickets();
+            updateTotalPrice(ticketPrice);
+            // Update the color of subtractButton based on the newCount
+            const subtractButton = ticketElement.querySelector('.subtractButton');
+            subtractButton.style.backgroundColor = newCount > 0 ? '#ec3a26' : '#999';
+        }
+
+        function updateFoodComboCount(foodComboID, quantity, foodPrice) {
+            console.log('Received foodComboID:', foodComboID);
+            const foodComboElement = document.getElementById(`foodComboCount${foodComboID}`);
+
+            if (!foodComboElement) {
+                console.error(`Element with ID 'foodComboCount${foodComboID}' not found.`);
+                return;
+            }
+
+            const currentCount = parseInt(foodComboElement.textContent) || 0;
+            const newCount = Math.max(Math.min(currentCount + quantity, 99), 0);
+
+            // Update the text content
+            foodComboElement.textContent = newCount;
+
+            updateTotalPrice(foodPrice * newCount);
+
+            const foodSubtractButton = document.querySelector(`.foodSubtractButton[data-id='${foodComboID}']`);
+
+
+            foodSubtractButton.style.backgroundColor = newCount > 0 ? '#ec3a26' : '#999';
+        }
+
+
+        // Calculate the total selected tickets across all types
+        function calculateTotalTickets() {
+            const ticketElements = document.querySelectorAll('.ticket');
+
+            let totalTickets = 0;
+
+            ticketElements.forEach(ticketElement => {
+                totalTickets += parseInt(ticketElement.dataset.count) || 0;
+            });
+
+            // Disable further ticket selection if total tickets match seat count
+            const proceedButton = document.getElementById('proceedToFood');
+            if (totalTickets === seatCount) {
+                proceedButton.removeAttribute('disabled');
+            } else {
+                proceedButton.setAttribute('disabled', 'true');
+            }
+
+            return totalTickets;
+        }
+
+
+        // Update the total price based on the selected tickets
+        function updateTotalPrice() {
+            const ticketElements = document.querySelectorAll('.ticket');
+            var foodComboElements = document.querySelectorAll('.food-combo-container');
+
+
+            let totalTicketPrice = 0;
+            let totalFoodPrice = 0;
+            let totalTickets = 0;
+
+            // Calculate total ticket price
+            ticketElements.forEach(ticketElement => {
+                const count = parseInt(ticketElement.dataset.count) || 0;
+                const price = parseFloat(ticketElement.dataset.price) || 0;
+                totalTicketPrice += count * price;
+                totalTickets += count;
+            });
+
+            // Calculate total food combo price
+            foodComboElements.forEach(foodComboElement => {
+                const count = parseInt(foodComboElement.querySelector('span').textContent) || 0;
+                const price = parseFloat(foodComboElement.querySelector('.food-combo-details h3').textContent.replace('$', '')) || 0;
+                console.log(`Count: ${count}, Price: ${price}`);
+                totalFoodPrice += count * price;
+            });
+
+            console.log(`Total Ticket Price: ${totalTicketPrice}`);
+            console.log(`Total Food Price: ${totalFoodPrice}`);
+
+            // Update ticket total price
+            document.getElementById('displayTicketTotalPrice').textContent = totalTicketPrice.toFixed(2);
+
+            // Update food total price
+            document.getElementById('displayFoodTotalPrice').textContent = totalFoodPrice.toFixed(2);
+
+            const totalPrice = totalTicketPrice + totalFoodPrice;
+
+            document.getElementById('displayTotalPrice').textContent = totalPrice.toFixed(2);
+
+            // Disable further ticket selection if total tickets match seat count
+            const addButtonElements = document.querySelectorAll('.addButton');
+            addButtonElements.forEach(addButtonElement => {
+                addButtonElement.disabled = totalTickets === seatCount;
+            });
+        }
+
+        function proceedToFood() {
+            // Hide ticket selection and show food selection
+            document.getElementById('ticketSelectionContainer').style.display = 'none';
+            document.getElementById('foodSelectionContainer').style.display = 'block';
+        }
+
+
+
+
+        // Function to collect and submit ticket information to the backend
+        function collectAndSubmit() {
+            // Validate that the user has selected the correct number of tickets
+            if (calculateTotalTickets() === seatCount) {
+                // Collect ticket information
+                const selectedTickets = [];
+                const ticketElements = document.querySelectorAll('.ticket');
+
+                ticketElements.forEach(ticketElement => {
+                    const ticketId = ticketElement.id.replace('ticket', '');
+                    const ticketCount = parseInt(ticketElement.dataset.count) || 0;
+                    const ticketPrice = parseFloat(ticketElement.dataset.price) || 0;
+
+                    if (ticketCount > 0) {
+                        selectedTickets.push({
+                            id: ticketId,
+                            count: ticketCount,
+                            price: ticketPrice
+                        });
+                    }
+                });
+
+                // Collect food information
+                const selectedFoodCombos = [];
+                const foodComboElements = document.querySelectorAll('.food-combo-container');
+
+                foodComboElements.forEach(foodComboElement => {
+                    console.log(foodComboElement)
+                    const foodComboId = foodComboElement.querySelector('span').id.replace('foodComboCount', '');
+                    console.log('foodComboId');
+                    console.log(foodComboId);
+                    const foodComboCount = parseInt(foodComboElement.querySelector('span').textContent) || 0;
+                    const foodComboPrice = parseFloat(foodComboElement.querySelector('.food-combo-details h3').textContent.replace('$', '')) || 0;
+
+                    if (foodComboCount > 0) {
+                        selectedFoodCombos.push({
+                            id: foodComboId,
+                            count: foodComboCount,
+                            price: foodComboPrice
+                        });
+                    }
+                });
+
+
+                // Prepare data for submission
+                const formData = new FormData();
+                formData.append('seatCount', seatCount);
+
+                selectedTickets.forEach(ticket => {
+                    formData.append(`ticket_id[]`, ticket.id);
+                    formData.append(`ticket_count[]`, ticket.count);
+                    formData.append(`ticket_price[]`, ticket.price);
+                });
+
+                selectedFoodCombos.forEach(foodCombo => {
+                    formData.append(`food_id[]`, foodCombo.id);
+                    formData.append(`food_count[]`, foodCombo.count);
+                    formData.append(`food_price[]`, foodCombo.price);
+                });
+
+
+                // Create a form element dynamically
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/bookings/${session_id}/process_tickets`;
+
+                // Append form data to the form element
+                for (const pair of formData.entries()) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = pair[0];
+                    input.value = pair[1];
+                    form.appendChild(input);
+                }
+
+
+                // Append the form to the document body and submit it
+                document.body.appendChild(form);
+                console.log('Food IDs:', formData.getAll('food_id[]'));
+                form.submit();
+            } else {
+                alert('Please select the correct number of tickets.');
+            }
+        }
+
+        // Function to handle Back and Cancel perfromance 
+        document.getElementById("backButton").addEventListener("click", function () {
+            history.back();
+        });
+
+        document.getElementById("cancelButton").addEventListener("click", function () {
+            window.location.href = "/";
+        });
+
+        window.onscroll = function () {
+            var backButton = document.getElementById("backButton");
+            var cancelButton = document.getElementById("cancelButton");
+
+            // Check if the user has scrolled
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backButton.classList.add("hidden");
+                cancelButton.classList.add("hidden");
+            } else {
+                backButton.classList.remove("hidden");
+                cancelButton.classList.remove("hidden");
+            }
+        };
+    </script>
+
+</body>
+
+</html>

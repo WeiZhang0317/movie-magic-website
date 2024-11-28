@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Cards Payment</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+
+ body {
+ font-family: 'Arial', sans-serif;
+
+ margin: 0;
+ padding: 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: 100vh;
+ }
+
+ .container {
+ display: flex;
+ }
+
+ .summary-container {
+
+ padding: 30px;
+ border-radius: 10px;
+ width: 500px;
+ text-align: center;
+ margin-right: 20px;
+ margin-top: 20px;
+ border: 2px solid #f9fafa;  /* Border color - you can change this */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Box shadow for a subtle effect */
+}
+ 
+ .payment-container {
+
+ padding: 30px;
+ border-radius: 10px;
+ width: 500px;
+ margin-top: 20px;
+ text-align: center;
+ border: 2px solid #f9fafa; /* Border color - you can change this */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Box shadow for a subtle effect */
+}
+ 
+
+ img {
+ max-width: 100%;
+ max-height: 150px;
+ margin-bottom: 10px;
+ }
+
+ p {
+ margin: 10px;
+ }
+
+ label {
+ display: block;
+ margin-bottom: 8px;
+ }
+
+ select,
+ input {
+ width: 100%;
+ padding: 8px;
+ margin-bottom: 16px;
+ box-sizing: border-box;
+ border: 1px solid #ccc;
+ border-radius: 4px;
+ font-size: 14px;
+ }
+
+ button {
+ background-color: #4caf50;
+ color: #fff;
+ padding: 10px;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ font-size: 16px;
+ margin-top: 10px;
+ }
+
+ .error-message {
+ margin-top: -12px;
+ font-size: 12px;
+ color: red;
+ }
+
+ #passwordContainer {
+ display: flex;
+ margin-top: -10px;
+ }
+
+ #showPassword {
+ width: 5%;
+ height: auto;
+ margin-right: 5px;
+ }
+
+ #showPasswordText {
+ font-size: 13px;
+ margin: 0px;
+ }
+
+ .back-button-section {
+            position: fixed;
+            bottom: 20px;
+            left: 50px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 30px;
+            background-color: #86898a;
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #86898a;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        @media only screen and (max-width: 600px) {
+        .container {
+            flex-direction: column; 
+        }
+
+        .summary-container,
+        .payment-container {
+            width: 100%; 
+            margin-right: 0; 
+        }
+    }
+    </style>
+</head>
+
+<body>
+
+{% include 'navi.html' %}
+ <div class="container">
+ <div class="summary-container">
+ <h2>Order Summary</h2>
+ <img src="{{ selected_image }}" alt="Selected Gift Card Image">
+ <p><strong>Card Type:</strong> ${{ card_type }}</p>
+ <p><strong>Quantity:</strong> {{ quantity }}</p>
+ <p><strong>Your Name:</strong> {{ your_name }}</p>
+ <p><strong>Recipient's Name:</strong> {{ recipients_name }}</p>
+ <p><strong>Recipient's Email:</strong> {{ recipients_email }}</p>
+ <p><strong>Special Message:</strong> {{ special_message }}</p>
+ <h2><strong>Total Price:</strong> ${{ total_price }}</h2>
+ </div>
+
+ <div class="payment-container">
+ <h2>Payment Method</h2>
+
+ <select id="paymentMethod" name="paymentMethod">
+ <option value="creditCard" selected>Credit Card</option>
+ <option value="internetBanking">Internet Banking</option>
+ </select>
+
+ <div id="creditCardFields">
+ <label for="cardNumber">Card Number:</label>
+ <input type="text" id="cardNumber" name="cardNumber" oninput="handleCardNumberInput(this)"
+ onkeydown="handleCardNumberInput(this)" required>
+ <p class="error-message" id="cardNumberError"></p>
+
+ <label for="cardName">Name on Card:</label>
+ <input type="text" id="cardName" name="cardName" oninput="validateCardName()" required>
+ <p class="error-message" id="cardNameError"></p>
+
+ <label for="expiryDate">Expiry Date:</label>
+ <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY"
+ oninput="validateExpiryDate(this)" required>
+ <p class="error-message" id="expiryDateError"></p>
+
+
+ <label for="securityCode">Security Code:</label>
+ <input type="text" id="securityCode" name="securityCode" oninput="validateSecurityCode(this)"
+ placeholder="***" required>
+ <p class="error-message" id="securityCodeError"></p>
+ </div>
+
+ <div id="internetBankingFields" style="display: none;">
+ <label for="bank">Select Bank:</label>
+ <select id="bank" name="bank">
+ <option value="anz">ANZ</option>
+ <option value="bnz">BNZ</option>
+ <option value="asb">ASB</option>
+ <option value="asb">Kiwibank</option>
+ <option value="asb">Westpac</option>
+ </select>
+
+ <label for="customerNumber">Customer Number:</label>
+ <input type="text" id="customerNumber" name="customerNumber" oninput="validateCustomerNumber()"
+ required>
+ <p class="error-message" id="customerNumberError"></p>
+
+ <label for="password">Password:</label>
+
+ <input type="password" id="password" name="password" oninput="validatePassword()" required>
+ <div id="passwordContainer">
+ <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+ <p id="showPasswordText">Show Password</p>
+ </div>
+ <p class="error-message" id="passwordError"></p>
+
+
+
+ </div>
+
+ <form action="/gift_cards_payment-success" method="post" id="paymentSuccessForm">
+    <!-- Hidden input fields to pass data -->
+    <input type="hidden" name="selected_image" value="{{ selected_image }}">
+    <input type="hidden" name="recipients_email" value="{{ recipients_email }}">
+    <input type="hidden" name="card_type" value="{{ card_type }}">
+    <input type="hidden" name="quantity" value="{{ quantity }}">
+
+
+    <button type="submit" id="payButton">Pay</button>
+</form>
+</div>
+</div>
+
+<section class="back-button-section">
+    <a href="{{ url_for('gift_card.gift_cards_choose') }}" class="button">Back</a>
+</section>
+    
+
+
+
+
+ <script>
+ var paymentMethodSelect = document.getElementById('paymentMethod');
+ var creditCardFields = document.getElementById('creditCardFields');
+ var internetBankingFields = document.getElementById('internetBankingFields');
+
+ paymentMethodSelect.addEventListener('change', function () {
+ if (paymentMethodSelect.value === 'creditCard') {
+ creditCardFields.style.display = 'block';
+ internetBankingFields.style.display = 'none';
+ } else {
+ creditCardFields.style.display = 'none';
+ internetBankingFields.style.display = 'block';
+ }
+ });
+
+ function handleCardNumberInput(input) {
+ var cardNumberError = document.getElementById('cardNumberError');
+ var formattedValue = input.value.replace(/\D/g, '');
+
+ // Limit the length to 16 digits
+ if (formattedValue.length > 16) {
+ formattedValue = formattedValue.slice(0, 16);
+ }
+
+ if (formattedValue.length > 0) {
+ formattedValue = formattedValue.match(new RegExp('.{1,4}', 'g')).join(' ');
+ }
+
+ input.value = formattedValue;
+
+ if (/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(formattedValue)) {
+ cardNumberError.textContent = "";
+ } else {
+ cardNumberError.textContent = "Enter a valid 16 digits card number.";
+ }
+ }
+
+
+ function validateCardName() {
+ var cardNameInput = document.getElementById('cardName');
+ var cardNameError = document.getElementById('cardNameError');
+ var regex = /^[a-zA-Z\s]+$/;
+
+ if (regex.test(cardNameInput.value)) {
+ cardNameError.textContent = "";
+ } else {
+ cardNameError.textContent = "Enter a valid name (letters and spaces only).";
+ }
+ }
+
+ function validateExpiryDate(input) {
+ // Remove non-digit characters
+ var inputValue = input.value.replace(/\D/g, '');
+
+ // Format the input value (add "/" after MM)
+ var formattedValue = inputValue.replace(/^(\d{2})(\d{0,2})/, '$1/$2');
+
+ // Update the input value
+ input.value = formattedValue;
+
+ // Check if it's a valid future date
+ var currentDate = new Date();
+ var currentYear = currentDate.getFullYear() % 100; // Get last two digits of the current year
+ var currentMonth = currentDate.getMonth() + 1; // Get current month
+
+ var enteredYear = parseInt(inputValue.substr(2, 2), 10);
+ var enteredMonth = parseInt(inputValue.substr(0, 2), 10);
+
+ // Validate month and year
+ if (
+ isNaN(enteredYear) ||
+ isNaN(enteredMonth) ||
+ enteredYear < currentYear ||
+ (enteredYear === currentYear && enteredMonth < currentMonth) ||
+ enteredMonth < 1 ||
+ enteredMonth > 12
+ ) {
+ document.getElementById('expiryDateError').textContent = "Enter a valid future date (MM/YY).";
+ } else {
+ document.getElementById('expiryDateError').textContent = "";
+ }
+ }
+
+ // Handle backspace key
+ document.getElementById('expiryDate').addEventListener('keydown', function (e) {
+ if (e.key === 'Backspace') {
+ var inputValue = this.value.replace(/\D/g, '');
+ var formattedValue = inputValue.substring(0, inputValue.length - 1).replace(/^(\d{2})(\d{0,2})/, '$1/$2');
+ this.value = formattedValue;
+ e.preventDefault(); // Prevent the default behavior of the backspace key
+ }
+ });
+
+
+ function validateSecurityCode(input) {
+ var securityCodeError = document.getElementById('securityCodeError');
+
+ var cleanedSecurityCode = input.value.replace(/\D/g, '');
+
+ input.value = cleanedSecurityCode;
+
+ if (/^\d{3}$/.test(cleanedSecurityCode)) {
+ securityCodeError.textContent = "";
+ } else {
+ securityCodeError.textContent = "Security code must be 3 digits.";
+ }
+ }
+
+ function validateCustomerNumber() {
+ var customerNumberInput = document.getElementById('customerNumber');
+ var customerNumberError = document.getElementById('customerNumberError');
+
+ if (/\D/.test(customerNumberInput.value)) {
+ customerNumberError.textContent = "Enter only numeric characters.";
+ } else {
+ customerNumberError.textContent = "";
+ }
+ }
+
+ function validatePassword() {
+ var passwordInput = document.getElementById('password');
+ var passwordError = document.getElementById('passwordError');
+
+ // Check if the password is empty
+ if (passwordInput.value.trim() === "") {
+ passwordError.textContent = "Password cannot be empty.";
+ } else if (document.getElementById('showPassword').checked) {
+ // If 'Show Password' is checked, no need to show an error
+ passwordError.textContent = "";
+ } else {
+ // Validate the password format (assuming your existing logic)
+ if (!/^\*+$/.test(passwordInput.value)) {
+ passwordError.textContent = "";
+ } else {
+ passwordError.textContent = "Enter a valid password.";
+ }
+ }
+ }
+
+
+ function togglePasswordVisibility() {
+ var passwordInput = document.getElementById('password');
+
+ if (document.getElementById('showPassword').checked) {
+ passwordInput.type = 'text';
+ } else {
+ passwordInput.type = 'password';
+ validatePassword(); // Run password validation when hiding the password
+ }
+ }
+
+ document.getElementById('payButton').addEventListener('click', function () {
+ if (paymentMethodSelect.value === 'creditCard') {
+ // Validate credit card fields
+ var isValidCreditCard = validateCreditCardFields();
+ if (!isValidCreditCard) {
+ return; // Do not proceed if there are errors
+ }
+ } else if (paymentMethodSelect.value === 'internetBanking') {
+ // Validate internet banking fields
+ var isValidInternetBanking = validateInternetBankingFields();
+ if (!isValidInternetBanking) {
+ return; // Do not proceed if there are errors
+ }
+ }
+
+ // Redirect to the success page
+ window.location.href = "/gift_cards_payment-success";
+ });
+
+ // Validation functions for credit card fields
+ function validateCreditCardFields() {
+ var cardNumberError = document.getElementById('cardNumberError');
+ var cardNameError = document.getElementById('cardNameError');
+ var expiryDateError = document.getElementById('expiryDateError');
+ var securityCodeError = document.getElementById('securityCodeError');
+
+ // Validate card number using existing logic
+ handleCardNumberInput(document.getElementById('cardNumber'));
+
+ // Validate card name using existing logic
+ validateCardName();
+
+ // Validate expiry date using existing logic
+ validateExpiryDate(document.getElementById('expiryDate'));
+
+ // Validate security code using existing logic
+ validateSecurityCode(document.getElementById('securityCode'));
+
+ // Check if any errors exist
+ if (
+ cardNumberError.textContent ||
+ cardNameError.textContent ||
+ expiryDateError.textContent ||
+ securityCodeError.textContent
+ ) {
+ return false; // Return false if there are errors
+ } else {
+ return true; // Return true if all validations pass
+ }
+ }
+
+ // Validation function for Internet Banking fields
+ function validateInternetBankingFields() {
+ var customerNumberError = document.getElementById('customerNumberError');
+ var passwordError = document.getElementById('passwordError');
+
+
+ // Validate customer number
+ validateCustomerNumber();
+
+ // Validate password
+ validatePassword();
+
+ // Check if any errors exist
+ if (
+ customerNumberError.textContent ||
+ passwordError.textContent
+ ) {
+ return false; // Return false if there are errors
+ } else {
+ return true; // Return true if all validations pass
+ }
+ }
+
+ 
+
+
+ </script>
+
+</body>
+
+</html>
+

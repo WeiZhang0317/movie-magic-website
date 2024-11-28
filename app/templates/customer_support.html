@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b;">Support Dashboard</h2>
+        <br>
+        <br>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('user.terms_and_conditions') }}" class="btn btn-danger btn-block">Terms and Conditions</a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('user.privacy_policy') }}" class="btn btn-danger btn-block">Privacy Policy</a>
+        </div>
+</div>
+
+{% endblock %}

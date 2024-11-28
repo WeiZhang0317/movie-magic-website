@@ -1,0 +1,106 @@
+
+
+body {
+      background: url('/static/img/back.png') no-repeat center center fixed; 
+      background-size: cover;           
+      font-family: "Cairo", sans-serif;
+      background-color: var(#181616);
+      color: var( #ffffff);
+      padding-top: var(60px);  
+  }
+
+  .card {
+          background: rgba(24, 22, 22, 0.7); 
+          color:  #ffffff
+     
+
+      }
+
+.login-card {
+      background: rgba(24, 22, 22, 0.7); 
+      color: #ffffff;
+      width: 50%; 
+      margin: 0 auto;
+      
+
+      }
+
+    
+.container {
+      max-width: 1920px;
+      padding: 0 40px;
+      margin: auto;
+      color:  #ffffff
+     
+      
+   
+}
+
+
+.button-container {
+      display: flex; /* Aligns items in a row */
+      align-items: center; /* Vertically centers items */
+      justify-content: space-between; /* Spaces out the buttons */
+      margin-right: 500px;/* Add padding or margin as needed */
+  }
+
+
+  @media only screen and (max-width: 850px) {
+      html {
+          font-size: 12px;
+      }
+  
+      .container {
+          padding: 0 15px;
+      }
+  
+      .poster-slide-item {
+          height: max-content;
+          padding-top: unset;
+      }
+  
+      .item-content-wraper {
+          width: 100%;
+          height: 100%;
+          padding-bottom: 20px;
+          padding-right: 5rem;
+          background-color: rgba(0, 0, 0, 0.2);
+      }
+  
+      .poster-slide-item-content {
+          position: relative;
+      }
+  
+      .poster-slide-item img {
+          height: 100%;
+      }
+  
+      .item-content-title {
+          font-size: 3rem;
+      }
+  
+      .hamburger-menu {
+          display: grid;
+      }
+  
+      .nav-menu {
+          /* display: none; */
+          position: absolute;
+          top: 100%;
+          left: -100%;
+          background-color: #000000;
+          flex-direction: column;
+          width: 80%;
+          height: 100vh;
+          padding: 20px;
+          transition: 0.3s ease-in-out;
+      }
+  
+      .nav-menu li {
+          margin: 10px 30px;
+      }
+  
+      .nav-menu.active {
+          left: 0;
+      }
+  }

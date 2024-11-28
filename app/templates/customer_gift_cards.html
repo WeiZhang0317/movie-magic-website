@@ -1,0 +1,330 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- customer_gift_cards.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Gift Cards</title>
+    <style>
+        .total-balance {
+            font-size: 20px; 
+            margin-bottom: 10px;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+
+        .card {
+            background-color: #0c0c0c;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #d42424;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #f2f1f1;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        .card-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .gift-card {
+            position: relative;
+            background-color: #222;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            background-size: 100%;
+            background-position: left;
+            color: #131212;
+            overflow: hidden;
+            width: 400px;  
+            height: 250px;
+            position: relative;
+        }
+
+        .card-info {
+            flex: 1;
+            padding: 20px;
+            text-align: left;
+            color: #fff;
+            display: none;
+        }
+
+        .gift-card:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-card:hover + .card-info {
+            display: block;
+        }
+
+        .details {
+            display: none;
+            background-color: rgba(236, 220, 220, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .details-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .details-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #86898a;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #86898a;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 30px;
+}
+
+.button:hover {
+    background-color: #86898a;
+    color: #fff;
+}
+
+buy-gift-card {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.buy-gift-card-button {
+    position: relative;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    background-color: #db3434;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;  
+    height: 250px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buy-gift-card-button:hover {
+    background-color: #000507;
+}
+
+.buy-gift-card-button:hover .plus-symbol {
+    background-color: #000507;
+    border-color: #fff; 
+}
+
+.plus-symbol {
+    font-size: 30px;
+    color: #fff; 
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #db3434; 
+    border: 3px solid #fff; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+
+.buy-gift-card-text {
+    color: #fff;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 120px;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+        border-radius: 0; 
+    }
+
+    .card-container {
+        flex-direction: column; 
+    }
+
+    .gift-card {
+        width: 100%; 
+        height: auto; 
+    }
+
+    .card-info {
+        display: block; 
+    }
+
+    .buy-gift-card-button {
+        width: 100%; 
+    }
+    
+    .buy-gift-card-text {
+        margin-top: 20px; 
+    }
+
+    .total-balance {
+        font-size: 16px; 
+        margin-bottom: 8px; 
+    }
+
+    h2 {
+        font-size: 24px; 
+        margin-bottom: 16px; 
+    }
+
+    .button {
+        font-size: 16px; 
+        padding: 8px 16px; 
+        margin-top: 20px; 
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2>Your Gift Cards</h2>
+        
+                <section>
+
+                
+                    {% if gift_cards %}
+                        <ul>
+                            {% for card in gift_cards %}
+                                <li>
+                                    <div class="card-container">
+                                        <div class="gift-card" style="background-image: url({{card[3]}});" data-card-number="{{ card[0] }}">
+                                            <strong>Card Number:</strong> {{ card[0] }}<br>
+                                            <strong>Balance:</strong> ${{ card[1] }}<br>
+                                        </div>
+                                        <div class="card-info">
+                                            <strong>Card Number:</strong> {{ card[0] }}<br>
+                                            <strong>Type:</strong> ${{ card[2] }}<br>
+                                            <strong>Balance:</strong> ${{ card[1] }}<br>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No gift cards available.</p>
+                    {% endif %}
+                </section>
+        
+                <section>
+                    <div class="buy-gift-card">
+                        <div class="buy-gift-card-button" onclick="navigateToGiftCards()">
+                            <div class="plus-symbol">+</div>
+                            <div class="buy-gift-card-text">Buy Gift Card</div>
+                        </div>
+                    </div>
+                </section>
+                
+
+                <section>
+                    <a href="{{ url_for('customer.customer_dashboard') }}" class="button">Back to Dashboard</a>    
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="details" id="details-modal">
+        <div class="details-container">
+            <span class="details-close" onclick="closeDetailsModal()">&times;</span>
+            <div id="details-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to navigate to gift_cards page
+        function navigateToGiftCards() {
+            window.location.href = "{{ url_for('gift_card.gift_cards') }}";
+        }
+    </script>
+    
+
+    <script>
+        // Function to open details modal
+        function openDetailsModal(cardNumber, type, expiryDate, balance) {
+            var modal = document.getElementById('details-modal');
+            var detailsContent = document.getElementById('details-content');
+            detailsContent.innerHTML = `
+                <h3>Gift Card Details</h3>
+                <strong>Card Number:</strong> ${cardNumber}<br>
+                <strong>Type:</strong> ${type}<br>
+                <strong>Balance:</strong> ${balance}<br>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        // Function to close details modal
+        function closeDetailsModal() {
+            var modal = document.getElementById('details-modal');
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
+{% endblock %}
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Cards Payment Success</title>
+    <!-- include what navi bar needed -->
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Gift Card Payment Successful</title>
+    <style>
+        body {
+            background-color: #000000d6;
+            color: #fff; 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        h1 {
+            color: rgb(234, 44, 44);
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px; 
+            line-height: 1.6; 
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navi.html' %}
+    
+    <h1>Gift Card Purchase Successful!</h1>
+
+    <p>Thank you for choosing our gift cards!</p>
+
+    <p>Your gift card purchase has been processed successfully.</p>
+    
+    
+    <p>Please allow up to 2 hours for your eGift Cards to arrive via email. Once received, your digital gift cards are ready for immediate use.</p>
+    
+    <p>Whether it's for a special occasion or a treat for yourself, enjoy the flexibility and convenience of shopping with our versatile gift cards.</p>
+     
+    
+</body>
+</html>

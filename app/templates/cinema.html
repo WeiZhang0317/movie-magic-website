@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic Cinema Page</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .content {
+            max-width: 1500px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+
+        .theater-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+    
+        }
+        .theater {
+            border: 1px solid #444;       
+            color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .theater:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .theater img {
+            width: 100%;
+            display: block;
+        }
+        .theater-info {
+            padding: 15px;
+        }
+        .theater-name {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+    
+        .details-seat {
+            text-decoration: none;
+            color: #06a5d6;
+            font-weight: bold;
+            margin-top: auto;
+        }
+        h1 {
+            color: #ffffff;
+            padding: 20px;
+            margin-left: 10px; 
+        }
+  
+
+        .registerhere {
+
+            color: #d60606;
+        }
+        
+            
+
+        
+        footer {
+            text-align: center;        
+            font-size: 0.8em; /* Smaller font size for footer text */
+        }
+
+
+
+    </style>
+</head>
+<body>
+    {% include 'navi.html' %}
+    <div class="content">
+   <h1> Cinemas </h1>
+   <p>Welcome to the enchanting world of Movie Magic Cinema, 
+    Auckland's premiere destination for film enthusiasts. Nestled in the heart of the city, 
+    our cinema offers an immersive movie-going experience with four exquisitely designed screening halls: Starlight Cinema, Moonlight Cinema, and Galaxy Cinema, each with a cozy capacity of 48, provide an intimate setting for movie lovers. For those seeking a grander viewing experience, our Widescreen Cinema boasts a capacity of 300, making it perfect for blockbuster releases. Join us at Movie Magic Cinema, where every showing is a spectacle, and every visitor is a VIP. </p>
+
+   
+    <div class="theater-grid">
+        {% for cinema in cinema %}
+        <div class="theater">
+            <img src="{{ url_for('static', filename='img/' + cinema.CinemaImage) }}" alt="{{ cinema.Name }}">
+            <div class="theater-info">
+                <div class="theater-name">{{ cinema.Name }}</div>
+                <div class="details-seat">Cinema capacity: {{ cinema.Capacity }} seats</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h1> About Us </h1>
+
+    <p> We're not just about showing films; we're about creating a community where every visit is tailored to your needs. Our advanced ticketing system ensures a smooth and personalized process, from viewing session times to selecting seats. With special pricing for all and extra discounts on Tuesdays, we make sure there's something for everyone. Sign in to manage your bookings, enjoy promotions, 
+    and make the most of our innovative features that set us apart in the world of cinema. <a href="{{ url_for('user.register') }}" class= "registerhere">Register here</a> if you don't have a account</p> 
+    
+        <!-- FOOTER SECTION -->
+     <!--  footer  -->
+     <footer class="section">
+        <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+        <p>
+            <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;"></span> |
+            <a href="#" onclick="showTermsandConditions()" style="color: red; text-decoration: underline;">Terms and Conditions</a> <span style="color: red;"></span> |
+            <a href="#" onclick="showContactUs()" style="color: red; text-decoration: underline;">Contact Us</a> <span style="color: red;"></span>
+        </p>
+        <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567 </p>
+    </footer>
+
+    <script>
+        function showPrivacyPolicy() {
+        window.location.href = "{{ url_for('user.privacy_policy') }}";
+    }
+
+    function showTermsandConditions() {
+        window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+    }
+
+    function showContactUs() {
+        window.location.href = "{{ url_for('user.contact_us') }}";
+    }
+    </script>
+
+    </div>
+    <!-- OWL CAROUSEL JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- CUSTOM SCRIPT -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

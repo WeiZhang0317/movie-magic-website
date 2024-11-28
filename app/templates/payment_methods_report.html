@@ -1,0 +1,86 @@
+<!-- Task 1: Manager and Admin secure login the dashboard with email and password -->
+<!-- Task 2: Generate the revenue report: show revenue per month in bar chart-->
+<!-- Task 3: Generate the revenue report: show revenue per day of week in bar chart -->
+<!-- Task 4: Generate the revenue report: show revenue per catagoty in pie chart-->
+<!-- Task 5: Generate the popularity report: show the top 5 movies of the year in bar chart -->
+<!-- Task 5:Back to main dashboard button -->
+
+{% extends 'layout.html' %}
+
+{% block content %}
+<br>
+<br>
+<body>
+    <div class="col-md-12">
+        <h1 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b;">MagicMovie Report</h1>
+        <br>
+        <!-- Dropdown for selecting the report -->
+        <form method="post" action="{{ url_for('admin.reports_generate', reportType='') }}" id="reportForm">
+            <div class="form-group">
+                <select name="reportType" class="form-control" onchange="this.form.submit()">
+                    <option value="none">Select Report Type</option>
+                    <option value="monthly_income">Monthly Income Report</option>
+                    <option value="week_of_date">Week of Date Report</option>
+                    <option value="income_by_category">Category Income Report</option>
+                    <option value="payment_methods">Payment Methods Report</option>
+                    <option value="popularity">Popularity Report</option>
+                    <option value="ticket_type">Ticket Type Report</option>
+                </select>
+            </div>
+        </form>
+
+        <br>
+        <!-- Monthly income Bar Chart -->
+        <div id="paymentMethodsContainer" class="chart-container">
+            <h3 class="text-center">Payment Methods Report</h3>
+            <br>
+            <h5 class="text-center">From 01/01/2024 to 31/12/2024</h5>
+            <!-- Show the income of each payment method -->
+            <br>
+            <div style="width: 800px; height: 550px; margin:auto;background-color:rgba(0, 0, 0, 0.934) ">
+            <br>
+            <p class="text-center">
+                {% for data in payment_methods_data %}
+                    {{ data['payment_method'] }}: ${{ data['income_per_paymentMethods'] }}
+                    <!--  add more space between each payment method -->
+                    {% if not loop.last %} &nbsp;&nbsp;&nbsp;&nbsp; {% endif %}
+                {% endfor %}
+            </p>
+            <p class="text-center">Total Income: $<span id="totalIncome">{{ totalIncome }}</span></p>
+            
+            <canvas id="paymentMethodsCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+        <div class="mt-3">
+            <button onclick="window.history.back();" class="btn btn-secondary">Back</button>
+            
+            </form>
+            <!-- Button to go back to the dashboard as per the user's role-->
+            {% if session['role'] == 'Admin' %}
+            <a href="/admin_dashboard" class="btn btn-secondary">Dashboard</a>
+            {% elif session['role'] == 'Staff' %}
+                <a href="/staff_dashboard" class="btn btn-secondary">Dashboard</a>
+            {% elif session['role'] == 'Customer' %}
+                <a href="/customer_dashboard" class="btn btn-secondary">Dashboard</a>
+            {% else %}
+                <a href="/manager_dashboard" class="btn btn-secondary">Dashboard</a>
+            {% endif %}
+        
+        </div>
+
+        <!-- Chart JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Initialize JavaScript Variable from Flask Template -->
+        <script>
+           var paymentMethodsData = {{ payment_methods_data | tojson }};
+        </script>
+   
+        <!-- Custom JavaScript File -->
+        <script src="{{ url_for('static', filename='js/report.js') }}"></script>
+        
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Magic Search Page</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation Menu Here -->
+    {% include 'navi.html' %}
+<div class="section">
+      <div class="container mt-5">
+          <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b;"> Search Results for {{ search_query or 'your query'}}</h2>
+          <br>
+          <div class="movies-slide carousel-nav-center owl-carousel">
+              <!-- SEARCH RESULT ITEM -->
+              {% for movie in search_results %}
+              <a href="{{ url_for('movie.movies', movie_id= movie.ID) }}" class="movie-item">
+                  <img src="{{ url_for('static', filename='img/' + movie.Image) }}" class="featured">
+                  <div class="movie-item-content">
+                      <div class="movie-item-title">
+                          {{ movie.Title }}
+                      </div>
+                      <div class="movie-infos">
+                          <div class="movie-info">
+                              <i class="fa-solid fa-clapperboard"></i>
+                              <span>  {{ movie.GenreName }}</span>
+                          </div>
+                          <div class="movie-info">
+                              <i class="fa-solid fa-earth-americas"></i>
+                              <span>  {{ movie.Language }}</span>
+                          </div>
+                          {% if movie.ReleaseDate > feb_end_date %}
+                          <div class="movie-info">
+                            <i class="fa-solid fa-calendar-days"></i>
+                              <span>Release Date: {{ movie.ReleaseDate.strftime('%d-%m-%Y') }}</span>
+                          </div>
+                          {% endif %}
+                          <br>
+                          <div class="movie-info">                             
+                              <span>Cast:                    
+                              <br> {{movie.ActorName}}</span>
+                          </div>
+               
+                          
+              
+                      </div>
+                  </div>
+              </a>
+              {% endfor %}
+        
+              {% if search_results|length == 0 %}
+              <p>No results found for your search.</p>
+              {% endif %}
+          </div>
+      </div>
+  </div>
+
+      <!-- OWL CAROUSEL JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+      <!-- CUSTOM SCRIPT -->
+      <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

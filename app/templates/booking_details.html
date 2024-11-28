@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- customer_booking_history.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Booking History</title>
+    <style>
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #0c0c0c;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #d42424;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #f2f1f1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        strong {
+            color: #ff6347;
+        }
+
+        a {
+            color: #61dafb;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #86898a;
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #86898a;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background-color: #86898a;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container mt-5">
+        <h2>Booking Details</h2>
+    
+        <section>
+            <h3>Tickets and Seats</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket Type</th>
+                        <th>Seat Row</th>
+                        <th>Seat Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket_info in details.tickets %}
+                    <tr>
+                        <td>{{ ticket_info[0] }}</td>
+                        <td>{{ ticket_info[2].decode('utf-8') }}</td>
+                        <td>{{ ticket_info[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    
+        <section>
+            {% if details.food_quantity %}
+            <h3>Food</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for food_name, quantity in details.food_quantity.items() %}
+                    <tr>
+                        <td>{{ food_name }}</td>
+                        <td>{{ quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </section>
+    
+        <a href="{{ url_for('customer.customer_booking_history') }}" class="button">Back</a>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}

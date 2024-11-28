@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Seats</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <style>
+        .cinema-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .moviecontainer {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            padding: 10px 0;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .movie-poster {
+            text-align: center;
+            margin-left: 20px;
+        }
+
+        .movie-poster img {
+            max-width: 205px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .movie-content {
+            text-align: center;
+            padding: 20px 10px;
+            max-width: 800px;
+        }
+
+        .movie-title {
+            color: #fff;
+            font-size: 1.5em;
+            margin: 0 0 10px 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        h1 {
+            color: #c0392b;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: rgb(241, 233, 233);
+        }
+
+        h3 {
+            color: #c0392b;
+        }
+
+        p {
+            margin-bottom: 10px;
+            margin-left: 20px;
+            color: #f7f3f3;
+        }
+
+        #seatMap {
+            text-align: center;
+            margin: 25px;
+            margin-top: 0;
+        }
+
+        .seat-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .seat {
+            width: 30px;
+            height: 30px;
+            margin: 5px 4px;
+            background-color: #000;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            color: #f0e9e9;
+            border-radius: 2px;
+        }
+
+        .row-label {
+            margin-right: 20px;
+            font-size: 14px;
+        }
+
+        .seat.available {
+            background-color: #b8bdb5 !important;
+        }
+
+        .seat.reserved {
+            background-color: #c0392b !important;
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background-color: rgba(88, 234, 44, 0.805);
+        }
+
+        #selectedSeats {
+            margin-top: -10px;
+            margin-left: 20px;
+            color: #fff;
+        }
+
+        #processButton {
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            margin-top: 15px;
+            cursor: pointer;
+            width: 150px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        #processButton:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .row-label {
+            margin-right: 20px;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .seat-row {
+                transform: scale(0.8);
+            }
+        }
+
+        @media only screen and (max-width: 992px) {
+            .seat-row {
+                transform: scale(0.6);
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .seat-row {
+                transform: scale(0.5);
+            }
+        }
+
+        .wheelchair-icon {
+            font-size: 22px;
+        }
+
+        #seatStatus {
+            text-align: center;
+            margin: 10px;
+            margin-top: -5px;
+        }
+
+        #seatStatus p {
+            font-size: 16px;
+            color: rgb(172, 168, 168);
+        }
+
+        .statusIndicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 12px;
+            border-radius: 5px;
+        }
+
+        #availableStatus {
+            background-color: #b8bdb5;
+        }
+
+        #reservedStatus {
+            background-color: #c0392b;
+        }
+
+        #selectedStatus {
+            background-color: rgba(88, 234, 44, 0.805);
+        }
+
+        #backButton {
+            position: fixed;
+            top: 6px;
+            left: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-left: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #backButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #cancelButton {
+            position: fixed;
+            top: 6px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-right: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #cancelButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #backButton.hidden,
+        #cancelButton.hidden {
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+
+            #backButton,
+            #cancelButton {
+                top: -20px;
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            #backButton {
+                left: -20px;
+            }
+
+            #cancelButton {
+                right: -20px;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            #seatStatus p {
+                transform: scale(0.5);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navi.html' %}
+
+    <div class="cinema-container">
+        <div class="moviecontainer">
+            <h1>Choose your Seats</h1>
+            <div class="movie-poster">
+                <img src="{{ url_for('static', filename='img/' + session_info[3]) }}" alt="{{ session_info[2] }}" />
+            </div>
+            <h2>{{session_info[2]}}</h2>
+            <h3>{{session_info[0]}} {{session_info[1]}}</h3>
+            <br>
+        </div>
+
+        <div id="seatStatus">
+            <p>
+                <span class="statusIndicator" id="availableStatus"></span> Available
+                <span class="statusIndicator" id="reservedStatus"></span> Reserved
+                <span class="statusIndicator" id="selectedStatus"></span> Selected
+                <span class="statusIndicator" id="wheelchairStatus">♿</span> Wheelchair
+            </p>
+        </div>
+
+
+        <div id="seatMap">
+            <p>FRONT OF CINEMA</p>
+        </div>
+
+        <div id="selectedSeats">Selected Seats: None</div>
+
+        <button id="processButton">Proceed</button>
+        <!-- Add a container element to hold the data -->
+        <div id="dataContainer" data-seats="{{ seats|tojson|safe }}" data-session-id="{{ session_id|tojson|safe }}">
+        </div>
+
+        <button id="backButton">&#60;</button>
+        <button id="cancelButton">x</button>
+    </div>
+
+
+    <script defer>
+        //var seats = {{ seats|tojson|safe }};
+        //var session_id = {{ session_id }};
+        var seats = JSON.parse(document.getElementById('dataContainer').getAttribute('data-seats'));
+        var session_id = JSON.parse(document.getElementById('dataContainer').getAttribute('data-session-id'));
+        var selectedSeats = [];
+
+        // Function to organize seats into rows
+        function organizeSeatsIntoRows(seatsData) {
+            const maxRow = Math.max(...seatsData.map(seat => seat[0]));
+            const seatMatrix = new Array(maxRow).fill(null).map(() => new Array());
+
+            seatsData.forEach(seat => {
+                const row = seat[0] - 1;
+                const isLeftEnd = seat[1] === 1;
+                const isSecondLeftEnd = seat[1] === 2;
+
+                // Check if it's the last row and at the left or second left end
+                const isWheelchairSeat = row === maxRow - 1 && (isLeftEnd || isSecondLeftEnd);
+
+                seatMatrix[row].push({ ...seat, isWheelchairSeat });
+            });
+
+            return seatMatrix;
+        }
+
+
+
+        // Function to render the seat matrix
+        function renderSeatMatrix(seatMatrix) {
+            var seatMap = document.getElementById("seatMap");
+
+            seatMatrix.forEach((row, rowIndex) => {
+                var rowContainer = document.createElement("div");
+                rowContainer.classList.add("seat-row");
+
+                var rowLabelElement = document.createElement("div");
+                rowLabelElement.classList.add("row-label");
+                rowLabelElement.textContent = String.fromCharCode(65 + rowIndex);
+                rowContainer.appendChild(rowLabelElement);
+
+
+                row.forEach(seat => {
+                    var seatElement = document.createElement("div");
+                    seatElement.classList.add("seat", `seat-${seat[0]}-${seat[1]}`);
+                    //seatElement.textContent = seat[1]; 
+
+
+                    if (seat.isWheelchairSeat) {
+                        seatElement.innerHTML = `<span class="wheelchair-icon">&#9855;</span>`; // Add wheelchair symbol
+                    }
+
+
+
+                    if (seat[2]) {
+                        seatElement.classList.add("available");
+                        seatElement.addEventListener("click", function () {
+                            toggleSeatState(seat);
+                        });
+                    } else {
+                        seatElement.classList.add("reserved");
+                    }
+
+
+                    rowContainer.appendChild(seatElement);
+                });
+
+                seatMap.appendChild(rowContainer);
+            });
+        }
+
+        function toggleSeatState(seat) {
+            const row = seat[0];
+            const seatNumber = seat[1];
+            const seatAvailability = seat[2];
+
+            // Ignore row number element
+            if (seatNumber === "row") {
+                return;
+            }
+
+            const rowLabel = String.fromCharCode(65 + row - 1); // A represents row 1, B represents row 2, and so on
+            const seatIdentifier = `${rowLabel}-${seatNumber}`;
+
+            if (seatAvailability === 1) {
+                // Change state to Selected
+                seat[2] = 2;
+                updateSeatClass(row, seatNumber, "available", "selected");
+                selectedSeats.push(seatIdentifier);
+            } else if (seatAvailability === 2) {
+                // Change state to Available
+                seat[2] = 1;
+                updateSeatClass(row, seatNumber, "selected", "available");
+                selectedSeats = selectedSeats.filter(selectedSeat => selectedSeat !== seatIdentifier);
+            }
+
+            updateSelectedSeatsText();
+        }
+
+        function updateSeatClass(row, seatNumber, fromClass, toClass) {
+            const selector = `.seat-${row}-${seatNumber}`;
+            const seatElement = document.querySelector(selector);
+
+            if (seatElement) {
+                seatElement.classList.remove(`${fromClass}`);
+                seatElement.classList.add(`${toClass}`);
+            } else {
+                console.error(`Seat element not found: [${row}, ${seatNumber}]`);
+            }
+        }
+
+        // Function to update the displayed information about selected seats
+        function updateSelectedSeatsText() {
+            var selectedSeatsText = document.getElementById("selectedSeats");
+            selectedSeatsText.textContent = `Selected Seats: ${selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}`;
+        }
+
+        // Generate the seat map when the page loads
+        window.onload = function () {
+            var seatMatrix = organizeSeatsIntoRows(seats);
+            renderSeatMatrix(seatMatrix);
+            var processButton = document.getElementById("processButton");
+            processButton.disabled = true;
+        };
+
+        document.addEventListener("click", function (event) {
+            // Update button state based on selected seats
+            processButton.disabled = selectedSeats.length === 0;
+        });
+
+        document.getElementById("processButton").addEventListener("click", function () {
+            // Redirect to the new page when the button is clicked
+            if (selectedSeats.length > 0) {
+                window.location.href = `/bookings/${session_id}/select_tickets?seatCount=${selectedSeats.length}&seatInfo=${selectedSeats}`;
+            }
+        });
+
+        // Function to handle Back and Cancel perfromance 
+        document.getElementById("backButton").addEventListener("click", function () {
+            history.back();
+        });
+
+        document.getElementById("cancelButton").addEventListener("click", function () {
+            window.location.href = "/";
+        });
+
+        window.onscroll = function () {
+            var backButton = document.getElementById("backButton");
+            var cancelButton = document.getElementById("cancelButton");
+
+            // Check if the user has scrolled
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backButton.classList.add("hidden");
+                cancelButton.classList.add("hidden");
+            } else {
+                backButton.classList.remove("hidden");
+                cancelButton.classList.remove("hidden");
+            }
+        };
+    </script>
+</body>
+
+</html>

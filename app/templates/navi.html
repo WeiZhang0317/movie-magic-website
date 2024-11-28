@@ -1,0 +1,337 @@
+<head>
+<style>
+
+    
+.container {
+    max-width: 1920px;
+    padding: 0 40px;
+    margin: auto;
+}
+
+
+:root {
+      --main-color: #c0392b;
+      --body-bg: #181616;
+      --box-bg: #221f1f;
+      --text-color: #ffffff;
+  
+      --nav-height: 60px;
+      --space-top: 30px;
+  }
+  
+
+
+  * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+  }
+  
+  html {
+      font-size: 16px;
+  }
+  
+ 
+  a {
+      text-decoration: none;
+      color: unset;
+  }
+  
+  img {
+      max-width: 100%;
+  }
+  
+  .main-color {
+      color: var(--main-color);
+  }
+
+
+  .overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+.nav-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 99;
+      background-color: #000000;
+  }
+  
+  .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var( #ffffff);
+      height: var(60px);
+    
+  }
+  
+  .nav a {
+      color: #ffffff;
+  }
+
+  .hamburger-menu {
+    --size: 30px;
+    height: var(--size);
+    width: var(--size);
+    cursor: pointer;
+    z-index: 101;
+    position: relative;
+    display: none;
+    align-items: center;
+}
+
+.hamburger {
+    position: relative;
+}
+
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+    width: var(--size);
+    height: 3px;
+    border-radius: 0.5rem;
+    background-color: var(--text-color);
+    transition: 0.4s;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: "";
+    position: absolute;
+    left: 0;
+}
+
+.hamburger::before {
+    top: -10px;
+}
+
+.hamburger::after {
+    bottom: -10px;
+}
+
+.hamburger-menu.active .hamburger {
+    background-color: transparent;
+}
+
+.hamburger-menu.active .hamburger::before {
+    transform-origin: top left;
+    transform: rotate(45deg);
+    left: 6px;
+}
+
+.hamburger-menu.active .hamburger::after {
+    transform-origin: bottom left;
+    transform: rotate(-45deg);
+    left: 6px;
+}
+  
+  .logo {
+      font-size: 2rem;
+      font-weight: 900;
+  }
+  .logo img {
+    width: 60px; 
+    height: auto; 
+  }
+  
+  .nav-menu {
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+  }
+  
+  .nav-menu li ~ li {
+      margin-left: 30px;
+  }
+  
+  .nav-menu a {
+      text-transform: uppercase;
+      font-weight: 700;
+  }
+  
+  .nav-menu a:hover {
+      color:  #c0392b;
+  }
+  
+  .nav-menu a.btn:hover,
+  a.logo:hover,
+  a.movie-item:hover {
+      color: unset;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem; 
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff; 
+    border-radius: 12px;
+    position: relative;
+    margin-top: 6.8px;
+}
+
+  
+  .btn-hover::before {
+      z-index: 1; 
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px; /* Make sure the pseudo-element also has rounded corners */
+      transition: all 0.3s ease;  /* Smooth transition for the hover effect */
+      background-color: var(--main-color); 
+  
+  
+  }
+
+  
+  .btn-hover:hover::before {
+      width: 100%;
+
+    box-shadow:  #ffffff 0px 1px 40px;
+  
+  }
+  
+  .btn i,
+  .btn span {
+      z-index: 1;
+  }
+  
+  .btn i {
+      margin-right: 1rem;
+  }
+
+ 
+
+@media only screen and (max-width: 850px) {
+
+    html {
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .content {
+        padding: 0 15px;
+    }
+
+    .hamburger-menu {
+        display: grid;
+    }
+
+    .item-content-wraper {
+        width: 100%;
+        height: 100%;
+        padding-bottom: 20px;
+        padding-right: 5rem;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-menu {
+        /* display: none; */
+        position: absolute;
+        top: 100%;
+        left: -100%;
+        background-color: #000000;
+        flex-direction: column;
+        width: 80%;
+        height: 100vh;
+        padding: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .nav-menu li {
+        margin: 10px 30px;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+}
+
+
+
+  
+ 
+</style>
+  <!-- CUSTOM SCRIPT -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+</head>
+
+<body>
+      <!-- Navigation Menu Here -->
+      <!-- NAV -->
+      <div class="nav-wrapper">
+          <div class="container">
+              <div class="nav">
+                  <a href="/" class="logo">
+                      <img src="/static/img/logo.png" alt="MovieMagic Logo">
+                     <span class="main-color">Movie</span>Magic
+                  </a>
+                  
+                  <ul class="nav-menu" id="nav-menu">
+                      <li><a href="{{ url_for('main.cinema') }}">Cinemas</a></li>
+                      <li><a href="{{ url_for('main.fooddrinks') }}">Food&Drinks</a></li>
+                      <li><a href="{{ url_for('promotion.promotions') }}">Promotions</a></li>
+                      <li><a href="{{ url_for('gift_card.gift_cards') }}">Gift Cards</a></li>
+                      <li><a href="{{ url_for('user.contact_us') }}">Contact Us</a></li>
+                      <li><a href="{{ url_for('user.FAQ') }}">FAQ</a></li>
+                  
+
+                      {% if session.get('loggedin') %}
+                      {% if session['role'] == 'Admin' %}
+                          <li><a href="/admin_dashboard" class="btn btn-secondary"><span>My Dashboard</span></a></li>
+                      {% elif session['role'] == 'Staff' %}
+                          <li><a href="/staff_dashboard" class="btn btn-secondary"><span>My Dashboard</span></a></li>
+                      {% elif session['role'] == 'Customer' %}
+                          <li><a href="/customer_dashboard" class="btn btn-secondary"><span>My Dashboard</span></a></li>
+                      {% elif session['role'] == 'Manager' %}
+                          <li><a href="/manager_dashboard" class="btn btn-secondary"><span>My Dashboard</span></a></li>
+                      {% endif %}
+                      <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
+                  {% else %}
+                        <!-- Display Login button if user is not logged in -->
+                            <li><a href="{{ url_for('user.login') }}" class="btn btn-hover"><span>Login</span></a></li>
+                        {% endif %}
+
+                   
+                  </ul>
+  
+                  <!-- MOBILE MENU TOGGLE -->
+                  <div class="hamburger-menu" id="hamburger-menu">
+                      <div class="hamburger"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- END NAV -->
+      <script>
+        $(document).ready(() => {
+            $('#hamburger-menu').click(() => {
+                $('#hamburger-menu').toggleClass('active');
+                $('#nav-menu').toggleClass('active');
+            });
+        });
+        </script>
+        
+  </body>
+  
+  

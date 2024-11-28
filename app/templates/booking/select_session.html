@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Session</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <style>
+        .content-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .moviecontainer {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+        }
+
+        .movie-poster {
+            text-align: center;
+            margin-left: 20px;
+        }
+
+        .movie-poster img {
+            max-width: 205px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .movie-content {
+            text-align: center;
+            padding: 10px;
+            max-width: 800px;
+        }
+
+        .movie-title {
+            color: #fff;
+            font-size: 1.5em;
+        }
+
+        .movie-description {
+            color: #bbb;
+            margin-bottom: 15px;
+        }
+
+
+        h1 {
+            color: #c0392b;
+            margin: 20px;
+        }
+
+        h3 {
+            margin: 15px;
+        }
+
+
+        .cinema-name {
+            font-size: 10px;
+
+        }
+
+        #sessionsContainer button {
+            padding: 8px 20px;
+            margin: 10px;
+            background-color: #c0392b;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            line-height: 0.8;
+
+        }
+
+        #dateButtons button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #181616;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            position: relative;
+            border-radius: 5px;
+        }
+
+        #dateButtons button:after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #c0392b;
+            transform: scaleX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #dateButtons button:hover:after {
+            transform: scaleX(1);
+            margin-top: -10px;
+        }
+
+        #dateButtons button:focus {
+            outline: none;
+        }
+
+        #dateButtons button.selected {
+            background-color: #181616;
+            color: #c0392b;
+        }
+
+        #dateButtons button.selected:after {
+            transform: scaleX(1);
+            background-color: #c0392b;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 6px;
+            left: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-left: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #backButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #cancelButton {
+            position: fixed;
+            top: 6px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #c0392b;
+            background-color: transparent;
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+            margin-right: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #cancelButton:hover {
+            background-color: #c0392b;
+            color: #ffffff;
+        }
+
+        #backButton.hidden,
+        #cancelButton.hidden {
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+
+            #backButton,
+            #cancelButton {
+                top: -20px;
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            #backButton {
+                left: -20px;
+            }
+
+            #cancelButton {
+                right: -20px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    {% include 'navi.html' %}
+
+    <div class="content-container">
+        <div class="moviecontainer">
+            <h1>Choose your Session</h1>
+            <div class="movie-poster">
+                <img src="{{ url_for('static', filename='img/' + movie.Image) }}" alt="{{ movie.Title }}" />
+            </div>
+            <div class="movie-content">
+                <h2 class="movie-title">{{ movie.Title }} </h2>
+                <p class="movie-description">{{ movie.Description }}</p>
+            </div>
+        </div>
+
+        <!-- Date Buttons -->
+        <ul id="dateButtons"></ul>
+
+        <!-- Sessions Container -->
+        <div id="sessionsContainer"></div>
+
+        <button id="backButton">&#60;</button>
+        <button id="cancelButton">x</button>
+
+    </div>
+
+
+    <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedMovieId = urlParams.get('selected_movie_id');
+
+
+        // Function to generate date buttons dynamically
+        function generateDateButtons() {
+            var dateButtons = document.getElementById("dateButtons");
+            var startDate = new Date();
+            var monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            for (let i = 0; i < 8; i++) {
+                var date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+
+                var dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date);
+                var dayOfMonth = date.getDate();
+                var monthAbbreviation = monthAbbreviations[date.getMonth()];
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var year = date.getFullYear();
+                var dateString = `${year}-${month}-${dayOfMonth}`;
+                var dateStringDisplay = (i === 0) ? "Today" : `${dayOfWeek} ${dayOfMonth} ${monthAbbreviation}`;
+
+                var button = document.createElement("button");
+                button.textContent = dateStringDisplay;
+
+                button.addEventListener("click", createClickHandler(dateString));
+
+                dateButtons.appendChild(button);
+                // Simulate a click on the "Today" button after generating buttons
+                if (i === 0) {
+                    button.click();
+                }
+            }
+        }
+
+        function createClickHandler(dateString) {
+            return function () {
+                var buttons = document.querySelectorAll("#dateButtons button");
+                buttons.forEach(button => {
+                    button.classList.remove("selected");
+                });
+
+                this.classList.add("selected");
+
+                selectDate(dateString);
+            };
+        }
+
+
+        // Function to fetch and display sessions for the selected date
+        function selectDate(selectedDate) {
+
+            fetch(`/bookings?selected_movie_id=${selectedMovieId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `selected_date=${selectedDate}`,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Display sessions in the sessionsContainer
+                    var sessionsContainer = document.getElementById("sessionsContainer");
+                    sessionsContainer.innerHTML = '';
+
+                    if (data.sessions.length > 0) {
+                        data.sessions.forEach(sessionInfo => {
+                            var formattedTime = sessionInfo.start_time.slice(0, -3);
+                            var cinemaName = sessionInfo.cinema_name;
+                            var button = document.createElement("button");
+                            button.innerHTML = `<span class="session-time">${formattedTime}</span><br><span class="cinema-name">${cinemaName}</span>`;
+                            //button.textContent = formattedTime;
+                            button.setAttribute("data-session-id", sessionInfo.session_id);
+                            sessionsContainer.appendChild(button);
+                        });
+                        addSessionClickListeners();
+                    } else {
+                        sessionsContainer.innerHTML = '<h3>Apologies, there are no sessions available for the selected date.</h3>';
+                    }
+                });
+        }
+        // Generate date buttons when the page loads
+        window.onload = function () {
+            generateDateButtons();
+            addSessionClickListeners();
+        };
+
+        // Event listener for session buttons
+        function addSessionClickListeners() {
+            var sessionButtons = document.querySelectorAll("#sessionsContainer button");
+            sessionButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    selectSession(button.getAttribute("data-session-id"));
+                });
+            });
+        }
+
+        // Function to handle the selection of a session and navigate to next page
+        function selectSession(sessionId) {
+            window.location.href = `/bookings/${sessionId}`;
+        }
+
+        // Function to handle Back and Cancel perfromance 
+        document.getElementById("backButton").addEventListener("click", function () {
+            history.back();
+        });
+
+        document.getElementById("cancelButton").addEventListener("click", function () {
+            window.location.href = "/";
+        });
+
+        window.onscroll = function () {
+            var backButton = document.getElementById("backButton");
+            var cancelButton = document.getElementById("cancelButton");
+
+            // Check if the user has scrolled
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backButton.classList.add("hidden");
+                cancelButton.classList.add("hidden");
+            } else {
+                backButton.classList.remove("hidden");
+                cancelButton.classList.remove("hidden");
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>

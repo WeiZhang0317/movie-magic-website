@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- BOX ICONS -->
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navi.css') }}">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Existing Styles */
+        .content {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        footer {
+            color: #ffffff;
+        }
+        h1 { 
+            color: #ffffff;
+            padding: 15px;
+        }
+        .contactus-details h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .contactus-details {
+            flex: 1; 
+            max-width: 50%; 
+            padding: 15px;
+        }
+        .contactus-details p {
+            margin-bottom: 20px;
+            white-space: nowrap;
+ 
+        }
+
+        /* Improved Form Styling */
+        form {
+            background: #474747;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        input[type=text], input[type=email], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #a1a1a1;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type=submit] {
+            width: 100%;
+            background-color: #962323;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type=submit]:hover {
+            background-color: #e46161;
+        }
+        label {
+            font-weight: bold;
+        }
+
+        /* Responsive Layout */
+        @media screen and (max-width: 768px) {
+            .contactus-details {
+                max-width: 100%;
+            }
+        }
+    </style>
+     <script>
+        function handleSubmit(event) {
+            event.preventDefault(); 
+            alert("Your messgae submit successfully！");  
+        }
+    </script>
+</head>
+<body>
+      {% include 'navi.html' %}
+      <div class="content">
+          <h1>Contact Us</h1>
+          <div class="contactus-details">
+              <h2>Get in Touch</h2>
+              <p>Have questions, comments, or need support? Reach out to us!</p>
+              
+               <!-- Contact Information -->
+            <div class="contact-info">
+                <p><strong>Phone:</strong> +64 3-123 4567</p>
+                <p><strong>Email:</strong> support@moviemagic.com</p>
+                <p><strong>Address:</strong> 123 Cinema Street, Rolleston, New Zealand</p>
+                
+                <!-- Embedded Google Map -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.070253876945!2d-73.98656728459567!3d40.7488179793272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259af61f15855%3A0x4d7746445186ae99!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1643494150335!5m2!1sen!2sus" 
+                width="600" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen=""  width="400" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            <br>
+            <h1>Leave us a messgae</h1>
+            <br>
+              <!-- Contact Form -->
+              <form onsubmit="handleSubmit(event)"  action="your-server-side-script" method="POST">
+                  <label for="name">Name:</label><br>
+                  <input type="text" id="name" name="name" required><br>
+                  <label for="email">Email:</label><br>
+                  <input type="email" id="email" name="email" required><br>
+                  <label for="message">Meassage:</label><br>
+                  <textarea id="message" name="message" required></textarea><br>
+                  <input type="submit" value="Submit">
+              </form>
+          </div>
+      </div>
+      
+
+
+      <!--  footer  -->
+        <footer class="section">
+            <p>&copy; 2024 Movie Magic. All Rights Reserved.</p>
+            <p>
+                <a href="#" onclick="showPrivacyPolicy()" style="color: red; text-decoration: underline;">Privacy Policy</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showTermsandConditions()" style="color: red; text-decoration: underline;">Terms and Conditions</a> <span style="color: red;"></span> |
+                <a href="#" onclick="showContactUs()" style="color: red; text-decoration: underline;">Contact Us</a> <span style="color: red;"></span>
+            </p>
+            <p>123 Cinema Street, Rolleston, New Zealand | +64 3-123 4567 </p>
+        </footer>
+
+        <script>
+               $(document).ready(() => {
+            $('#hamburger-menu').click(() => {
+                $('#hamburger-menu').toggleClass('active');
+                $('#nav-menu').toggleClass('active');
+            });
+        });
+
+        
+            function showPrivacyPolicy() {
+            window.location.href = "{{ url_for('user.privacy_policy') }}";
+        }
+
+        function showTermsandConditions() {
+            window.location.href = "{{ url_for('user.terms_and_conditions') }}";
+        }
+
+        function showContactUs() {
+            window.location.href = "{{ url_for('user.contact_us') }}";
+        }
+        </script>
+     
+     
+      
+  </body>
+</html>

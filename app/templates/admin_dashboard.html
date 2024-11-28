@@ -1,0 +1,76 @@
+<!-- # Criteria:
+# Secure login.
+# View and manage my profile details
+# View and manage staff profiles
+# View and manage all customer profiles
+# View and manage movie session times, name, description, category, and ratings
+# Assign movies to different sessions
+# View and manage promotions
+# Manage ticket prices
+# The administrator can categorize movies by movie type and rating, place them into different category lists, and manage these category lists.  
+# Generate the report -->
+
+{% extends 'layout.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+
+    <div class="card-body">
+        <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b;">Admin Dashboard</h2>
+            
+        <br>
+        <br>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('user.profile') }}" class="btn btn-danger btn-block">
+                <i class="bi bi-person"></i> My Profile
+            </a>
+        </div>
+                
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.staff_list_view') }}"class="btn btn-danger btn-block">Staff Management</a>
+        </div>
+
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.customer_list_view') }}" class="btn btn-danger btn-block">Customer Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.manager_movie_schedule_view') }}" class="btn btn-danger btn-block">Session Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.movie_list_view') }}" class="btn btn-danger btn-block">Movie Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.movie_category') }}" class="btn btn-danger btn-block">Settings Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('staff.staff_select_session') }}" class="btn btn-danger btn-block">Check customers into their movie</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.promotion_list') }}" class="btn btn-danger btn-block">Promotion Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.ticket_price_list') }}" class="btn btn-danger btn-block">Ticket Price Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.foodcombo_list') }}" class="btn btn-danger btn-block">Food & Drinks Management</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.reports') }}" class="btn btn-danger btn-block">Reports</a>
+        </div>
+    </div>
+
+</div>
+        
+{% endblock %}

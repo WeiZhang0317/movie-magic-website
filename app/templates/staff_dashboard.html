@@ -1,0 +1,36 @@
+<!--this page is for staff dashboard-->
+{% extends 'layout.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="card mt-4">
+
+    <div class="card-body">
+        <h2 class="shake" style="font-size: 2rem; font-weight: 900; color: #c0392b;">Staff Dashboard</h2> 
+        <br>
+        <br>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('user.profile') }}" class="btn btn-danger btn-block">
+                <i class="bi bi-person"></i> My Profile
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.manager_movie_schedule_view') }}" class="btn btn-danger btn-block">Session View</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('manager.movie_list_view') }}" class="btn btn-danger btn-block">Movie List View</a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('staff.staff_select_session') }}"  class="btn btn-danger btn-block">Check customers into their movie</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+

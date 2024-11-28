@@ -1,0 +1,293 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="custom-content">
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.css">
+    <style>
+        /* Styles for custom content */
+        #custom-content {
+            color: #ecf0f1; /* Light grey text */
+        }
+        #custom-content #filter {
+            float: left;
+            width: 20%;
+            background-color: #333333; 
+            padding: 10px;
+            box-sizing: border-box;
+            height: 100vh; /* Full height */
+            border-radius: 4px;
+        }
+        #custom-content #sessions-list {
+            float: left;
+            width: 75%;
+            margin-left: 5%;
+        }
+        #custom-content .container {
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden; 
+        }
+        #custom-content .card {
+            background-color: #1a1a1a; 
+            position: relative; 
+        }
+        #custom-content .card-body {
+            position: relative;
+        }
+        #custom-content #sort-order {
+            position: absolute; 
+            right: 20px; 
+            top: 90px; 
+        }
+        #custom-content #sort-order select {
+            padding: 5px 30px 5px 10px; 
+            color: #ffffff; 
+            background-color:  #333333; 
+            border: 1px solid #a5a5a5; 
+            border-radius: 4px; /* Rounded corners */
+            font-size: 1rem;
+        }
+        #custom-content #sort-order:after {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+        #custom-content .session-link {
+            display: block;
+            text-decoration: none;
+            color: inherit; 
+        }
+        #custom-content .session {
+            background-color: #333333; 
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px 0 rgba(167, 40, 40, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+        }
+
+      
+        #custom-content a {
+            color:  #c0392b; 
+            font-weight: 500;
+            margin-bottom: 6px; 
+            display: block;
+        }
+       
+        #custom-content h2 {
+        color: #e0e0e0; 
+        font-size: 27px; 
+        font-weight: 700;
+       }
+
+        #custom-content h3 {
+            color: #ffffff; 
+            font-size: 20px;
+            font-weight: 500; 
+        }
+
+        #custom-content #search input[type="text"] {
+            padding: 5px;
+            margin-right: 5px; /* Space between input and button */
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            color: #495057;
+            background-color: #e4e4e4;
+            width: 950px; 
+        }
+
+        #custom-content #search input[type="submit"] {
+            padding: 5px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            color: #ffffff;
+            background-color: #c0392b; /* Use the same red color for consistency */
+            cursor: pointer;
+        }
+                
+            #custom-content .pagination {
+            display: flex;
+            justify-content: center; 
+            list-style: none; 
+            padding-left: 0
+        }
+
+            #custom-content .pagination li {
+                margin: 0 5px; 
+                display: inline-block;
+                list-style: none;
+            }
+
+            #custom-content .pagination a {
+                color: #c0392b; 
+                text-decoration: none; 
+                padding: 5px 10px; 
+                border-radius: 4px; 
+                border: 1px solid #c0392b; 
+            }
+            #custom-content .current-filter-style {
+                color: white;   
+                margin-bottom: 10px;   
+                margin-left: 10px;       
+                border: none;   
+                        }
+
+            #custom-content .pagination .active a,
+            #custom-content .pagination a:hover {
+                background-color: #c0392b; 
+                color: #ffffff;
+            }
+
+            #custom-content .pagination .disabled span {
+             color: #a5a5a5; 
+            cursor: not-allowed; 
+            padding: 5px 10px; 
+            border-radius: 4px; 
+            border: 1px solid #a5a5a5;
+            }
+
+            .pagination-container {              
+                margin-top: 50px; 
+                padding-left: 15px; 
+                text-align: left; 
+            }
+    </style>
+
+
+    <div class="container mt-5">
+        <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b;">Finding the Session for Ticket Checking</h2>
+        <div class="card">
+            <div class="card-body">
+                <!-- search bar for movie -->
+                <div id="search">
+                    <form method="GET" action="{{ url_for('staff.staff_select_session') }}">
+                        <input type="text" name="search" placeholder="Search movie names..." value="{{ request.args.get('search', '') }}">
+                        <input type="submit" value="Search">
+                    </form>
+                </div>
+                <br>
+                <!-- order by function -->
+                <div id="sort-order">
+                    <form method="GET" action="{{ url_for('staff.staff_select_session') }}">
+                        <input type="hidden" name="search" value="{{ search_query }}">
+                        <input type="hidden" name="cinema" value="{{ filter_cinema }}">
+                        <input type="hidden" name="day" value="{{ filter_day }}">
+                        <select name="order" onchange="this.form.submit()">
+                             <option value="asc" {% if order == 'asc' %}selected{% endif %}> Earliest to latest</option>
+                            <option value="desc" {% if order == 'desc' %}selected{% endif %}> Latest to earliest</option>
+                        </select>
+                    </form>
+                </div>
+                <!-- filter by cinema -->
+                <div id="filter">
+                    <h2>Filter by</h2>
+                    <i class="fa-solid fa-clapperboard"> Cinema Name</i> 
+                   <br>
+                    <div>
+                     
+                        <a href="{{ url_for('staff.staff_select_session', cinema='', day=request.args.get('day', ''), search=request.args.get('search', '')) }}">All Cinemas</a>
+                        {% for cinema in cinemas %}
+                        <a href="{{ url_for('staff.staff_select_session', cinema=cinema.Name, day=request.args.get('day', ''), search=request.args.get('search', '')) }}">{{ cinema.Name }}</a>
+                        {% endfor %}
+                    </div>
+                    <!-- filter by day of week -->
+                    <br>
+                    <i class="fa-solid fa-calendar-week">  Day of Week</i> 
+                    <br>
+                    <div>
+                        <a href="{{ url_for('staff.staff_select_session', day='', cinema=request.args.get('cinema', ''), search=request.args.get('search', '')) }}">All Days</a>
+                        {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+                        <a href="{{ url_for('staff.staff_select_session', day=day, cinema=request.args.get('cinema', ''), search=request.args.get('search', '')) }}">{{ day }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+               
+
+                <!-- list the sessions title -->
+                <div id="sessions-list">
+                    <h2 style="font-size: 2rem; font-weight: 900; color: #c0392b;">Sessions</h2>
+                    <br>
+                    <!-- list the filtering criteria -->
+                    <div id="current-filter" class="current-filter-style">
+                        <strong>Current Filter</strong>
+                        {% set current_cinema = request.args.get('cinema') %}
+                        {% set current_day = request.args.get('day') %}
+
+                        {% if current_cinema or current_day %}
+                            <p>
+                                {% if current_cinema %}
+                                <strong>Cinema:</strong> {{ current_cinema }}
+                                    {% if current_day %}, {% endif %}
+                                {% endif %}
+
+                                {% if current_day %}
+                                <strong>Day of week:</strong>  {{ current_day }}
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <p>No filters applied.</p>
+                        {% endif %}
+                    </div>
+
+                <!-- list the sessions -->
+                    {% for session in sessions %}
+                    <a href="{{ url_for('staff.staff_checkin', session_id=session['ID']) }}" class="session-link">
+                        <div class="session">
+                            <p><strong>Movie: </strong>{{ session['Title'] }}</p>
+                            <p><strong>Cinema: </strong>{{ session['Name'] }}</p>
+                            <p><strong>Date: </strong>{{ session['Date'] }}, {{ session['DayOfWeek'] }}</p>
+                            <p><strong>Start time:</strong> {{ session['StartTime'] }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}      
+                    
+                    
+                 <div class="pagination-container">
+                    {% if total_pages > 1 %}
+                    <nav aria-label="Session page navigation" style="text-align: center;">
+                        <ul class="pagination">
+                            {% if current_page > 1  %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('staff.staff_select_session', page=current_page-1, search=search_query, order=order, day=filter_day, cinema=filter_cinema) }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&laquo;</span>
+                                </li>
+                            {% endif %}
+
+
+                            {% for page in range(1, total_pages + 1) %}
+                                <li class="page-item {% if page == current_page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('staff.staff_select_session', page=page, search=search_query, order=order, day=filter_day, cinema=filter_cinema) }}">{{ page }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if current_page < total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('staff.staff_select_session', page=current_page+1, search=search_query, order=order, day=filter_day, cinema=filter_cinema) }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&raquo;</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+               </div>
+
+            </div>
+
+
+
+            </div>
+        </div> 
+    </div> 
+{% endblock %}
+         
